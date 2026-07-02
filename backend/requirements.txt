@@ -1,0 +1,41 @@
+# ========== Web 框架 ==========
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+
+# ========== LangChain 生态（仅知识库文档处理） ==========
+langchain>=0.2.0
+langchain-community>=0.2.0
+
+# ========== LLM 调用（OpenAI 兼容接口） ==========
+openai>=1.30.0
+
+# ========== 模型下载 ==========
+modelscope>=1.20.0
+
+# ========== Embedding & Reranker ==========
+sentence-transformers>=2.7.0
+transformers>=4.40.0
+torch>=2.2.0
+
+# ========== 向量数据库 - Milvus Lite（嵌入式，无需 Docker） ==========
+pymilvus[milvus_lite]>=2.4.0
+
+# ========== 关系数据库 - PostgreSQL ==========
+sqlalchemy[asyncio]>=2.0.0
+asyncpg>=0.29.0
+psycopg2-binary>=2.9.0
+
+# ========== 缓存 - Redis ==========
+redis>=5.0.0
+
+# ========== 文档解析 ==========
+pypdf>=4.0.0
+python-docx>=1.1.0
+unstructured>=0.13.0
+markdown>=3.6
+
+# ========== 工具 ==========
+python-multipart>=0.0.9
+aiofiles>=23.2.0
