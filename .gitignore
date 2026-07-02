@@ -1,1 +1,2 @@
-models/
+models/BAAI/bge-large-zh-v1.5/
+models/BAAI/bge-reranker-large/
