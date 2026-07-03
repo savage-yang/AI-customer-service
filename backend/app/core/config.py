@@ -16,11 +16,11 @@ class Settings(BaseSettings):
 
     # ========== Embedding 配置 ==========
     embedding_model_name: str = "BAAI/bge-large-zh-v1.5"
-    embedding_device: str = "cpu"
+    embedding_device: str = "cuda:1"
 
     # ========== Reranker 配置 ==========
     reranker_model_name: str = "BAAI/bge-reranker-large"
-    reranker_device: str = "cpu"
+    reranker_device: str = "cuda:1"
 
     # ========== Milvus 配置 ==========
     milvus_host: str = "localhost"
@@ -63,7 +63,9 @@ class Settings(BaseSettings):
     chunk_size: int = 500
     chunk_overlap: int = 50
     retrieval_top_k: int = 5
+    retrieval_score_threshold: float = 0.7
     rerank_top_k: int = 3
+    knowledge_base_topics: str = "产品使用指南、故障排查、售后服务、订单处理、常见问题"
 
     class Config:
         env_file = ".env"

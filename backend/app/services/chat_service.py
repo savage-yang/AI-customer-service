@@ -11,6 +11,7 @@ class ChatService:
         """流式多轮对话（重排序始终启用）"""
         history = await redis_client.get_session(session_id)
 
+        context_str = ""
         if history:
             recent = history[-6:]
             context_lines = []
@@ -18,12 +19,12 @@ class ChatService:
                 role = "用户" if msg["role"] == "user" else "助手"
                 context_lines.append(f"{role}: {msg['content']}")
             context_str = "\n".join(context_lines)
-            full_question = f"对话历史：\n{context_str}\n\n用户当前问题：{question}"
-        else:
-            full_question = question
 
         full_answer = ""
-        async for chunk in rag_service.ask_stream(full_question):
+        async for chunk in rag_service.ask_stream(
+            question=question,
+            history=context_str if history else "",
+        ):
             full_answer += chunk
             yield chunk
 

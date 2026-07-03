@@ -45,9 +45,9 @@ def main():
     # ===== 1. 加载 Embedding =====
     print("\n[1/5] 加载 Embedding 模型...")
     t0 = time.time()
-    embed_model = SentenceTransformer(str(EMBEDDING_PATH), device="cpu")
+    embed_model = SentenceTransformer(str(EMBEDDING_PATH), device="cuda:1")
     dim = embed_model.get_embedding_dimension()
-    print(f"  加载完成，维度={dim}，耗时 {time.time() - t0:.2f}s")
+    print(f"  加载完成，维度={dim}，设备={embed_model.device}，耗时 {time.time() - t0:.2f}s")
 
     # ===== 2. 知识库向量化 =====
     print("\n[2/5] 知识库向量化（灌库模拟）...")
@@ -62,8 +62,9 @@ def main():
     t0 = time.time()
     rerank_tokenizer = AutoTokenizer.from_pretrained(str(RERANKER_PATH))
     rerank_model = AutoModelForSequenceClassification.from_pretrained(str(RERANKER_PATH))
+    rerank_model = rerank_model.to("cuda:1")
     rerank_model.eval()
-    print(f"  加载完成，耗时 {time.time() - t0:.2f}s")
+    print(f"  加载完成，设备={next(rerank_model.parameters()).device}，耗时 {time.time() - t0:.2f}s")
 
     # ===== 4. 检索 + 重排序测试 =====
     print("\n[4/5] 向量检索 + 重排序测试...")
@@ -98,9 +99,9 @@ def main():
             inputs = rerank_tokenizer(
                 [q] * len(retrieved), retrieved,
                 padding=True, truncation=True, max_length=512, return_tensors="pt",
-            )
+            ).to("cuda:1")
             logits = rerank_model(**inputs).logits.squeeze(-1)
-            rerank_scores = torch.sigmoid(logits).numpy().tolist()
+            rerank_scores = torch.sigmoid(logits).cpu().numpy().tolist()
 
         ranked = sorted(zip(retrieved, rerank_scores), key=lambda x: x[1], reverse=True)
         for i, (doc, score) in enumerate(ranked, 1):

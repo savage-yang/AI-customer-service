@@ -1,8 +1,7 @@
 from pymilvus import MilvusClient
 
-client = MilvusClient(uri=r"D:\客服机器人\backend\data\milvus_kb.db")
+client = MilvusClient(uri=r"/mnt/workspace/user8/AI-customer-service/backend/data/milvus_kb.db")
 
-# 先加载 collection（Milvus Lite 需要这一步）
 client.load_collection(collection_name='customer_service_kb')
 
 results = client.query(

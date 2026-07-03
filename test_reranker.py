@@ -23,8 +23,9 @@ def main():
     t0 = time.time()
     tokenizer = AutoTokenizer.from_pretrained(str(MODEL_PATH))
     model = AutoModelForSequenceClassification.from_pretrained(str(MODEL_PATH))
+    model = model.to("cuda:1")
     model.eval()
-    print(f"  加载完成，耗时 {time.time() - t0:.2f}s")
+    print(f"  加载完成，设备={next(model.parameters()).device}，耗时 {time.time() - t0:.2f}s")
 
     print("\n[2/3] 准备测试数据...")
     query = "如何申请退款？"
@@ -52,9 +53,9 @@ def main():
             truncation=True,
             max_length=512,
             return_tensors="pt",
-        )
+        ).to("cuda:1")
         logits = model(**inputs).logits.squeeze(-1)
-        scores = torch.sigmoid(logits).numpy().tolist()
+        scores = torch.sigmoid(logits).cpu().numpy().tolist()
 
     print(f"  计算完成，耗时 {time.time() - t0:.3f}s")
 

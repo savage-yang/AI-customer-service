@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8000';
+const API_BASE = '';
 
 /** 发送消息，SSE 流式接收回复 */
 export async function chatStream(sessionId, question, onChunk, onError) {

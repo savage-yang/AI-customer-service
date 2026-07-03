@@ -26,7 +26,7 @@ def main():
 
     print("\n[1/3] 加载模型...")
     t0 = time.time()
-    model = SentenceTransformer(str(MODEL_PATH), device="cpu")
+    model = SentenceTransformer(str(MODEL_PATH), device="cuda:1")
     print(f"  加载完成，耗时 {time.time() - t0:.2f}s")
 
     dim = model.get_embedding_dimension()

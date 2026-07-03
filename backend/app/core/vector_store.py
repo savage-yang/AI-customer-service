@@ -91,6 +91,7 @@ class VectorStoreClient:
             top_k = settings.retrieval_top_k
 
         collection_name = self._ensure_collection()
+        self.client.load_collection(collection_name=collection_name)
         query_embedding = embedding_client.encode_query(query)
 
         results = self.client.search(
@@ -103,11 +104,13 @@ class VectorStoreClient:
         docs = []
         for hits in results:
             for hit in hits:
-                docs.append({
-                    "content": hit.get("entity", {}).get("content", ""),
-                    "source": hit.get("entity", {}).get("source", ""),
-                    "score": float(hit.get("distance", 0)),
-                })
+                score = float(hit.get("distance", 0))
+                if score >= settings.retrieval_score_threshold:
+                    docs.append({
+                        "content": hit.get("entity", {}).get("content", ""),
+                        "source": hit.get("entity", {}).get("source", ""),
+                        "score": score,
+                    })
         return docs
 
     def delete_by_source(self, source: str) -> int:
