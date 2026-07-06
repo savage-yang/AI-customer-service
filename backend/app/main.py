@@ -26,6 +26,8 @@ from app.api import chat, knowledge
 from app.core.config import settings
 from app.core.redis_client import redis_client
 from app.core.vector_store import vector_store_client
+from app.core.embedding import embedding_client
+from app.services.rerank_service import rerank_service
 
 
 @asynccontextmanager
@@ -37,6 +39,16 @@ async def lifespan(app: FastAPI):
 
     # 预加载 Milvus collection 到内存（数据已持久化，不需要重新灌库）
     vector_store_client.ensure_loaded()
+
+    # 预加载 Embedding 模型（避免首次请求冷启动）
+    print(f"[INFO] 正在预加载 Embedding 模型: {settings.embedding_model_name}")
+    _ = embedding_client.embeddings
+    print(f"[INFO] Embedding 模型加载完成，维度: {embedding_client.dimension}")
+
+    # 预加载 Reranker 模型（避免首次请求冷启动）
+    print(f"[INFO] 正在预加载 Reranker 模型: {settings.reranker_model_name}")
+    rerank_service._load()
+    print(f"[INFO] Reranker 模型加载完成")
 
     print(f"[INFO] 服务已启动 http://{settings.app_host}:{settings.app_port}")
     yield

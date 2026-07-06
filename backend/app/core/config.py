@@ -63,7 +63,7 @@ class Settings(BaseSettings):
     chunk_size: int = 500
     chunk_overlap: int = 50
     retrieval_top_k: int = 5
-    retrieval_score_threshold: float = 0.7
+    retrieval_score_threshold: float = 0.6
     rerank_top_k: int = 3
     knowledge_base_topics: str = "产品使用指南、故障排查、售后服务、订单处理、常见问题"
 
