@@ -8,6 +8,9 @@ export default defineConfig({
     proxy: {
       '/chat': 'http://localhost:8000',
       '/knowledge': 'http://localhost:8000',
+      '/video': 'http://localhost:8001',
+      '/ws/video': 'ws://localhost:8001',
+      '/ws/agent': 'ws://localhost:8001',
     },
   },
 });

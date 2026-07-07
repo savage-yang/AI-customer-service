@@ -356,3 +356,278 @@ html, body, #root {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.2);
 }
+
+/* ====== Agent Workbench ====== */
+
+.agent-workbench {
+  display: flex;
+  height: 100%;
+}
+
+.agent-sidebar {
+  width: 320px;
+  min-width: 320px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.agent-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.agent-sidebar-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.online-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #34c759;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #86868b;
+}
+
+.status-dot.online {
+  background: #34c759;
+}
+
+.call-section {
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.call-section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.empty-calls {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.call-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.call-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+.call-item.waiting {
+  border-left: 3px solid #ff9500;
+}
+
+.call-item.connected {
+  border-left: 3px solid #34c759;
+}
+
+.call-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-id {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.call-time {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.status-badge {
+  font-size: 11px;
+  color: #34c759;
+  background: rgba(52, 199, 89, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.btn-answer {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-answer:hover {
+  opacity: 0.9;
+}
+
+.agent-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.video-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.video-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.video-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.call-duration {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.video-area {
+  flex: 1;
+  background: #000;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.waiting-video {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.waiting-icon {
+  font-size: 48px;
+}
+
+.waiting-video p {
+  font-size: 14px;
+}
+
+.video-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.btn-control {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-control:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.btn-control.disabled {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.btn-control.btn-end {
+  background: #e74c3c;
+  color: white;
+  border-color: #e74c3c;
+}
+
+.btn-control.btn-end:hover {
+  background: #c0392b;
+}
+
+.empty-video {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.empty-video .empty-icon {
+  font-size: 56px;
+}
+
+.empty-video p {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.empty-video span {
+  font-size: 14px;
+}
+
+.agent-link {
+  margin-top: 16px;
+  padding: 8px 20px;
+  background: var(--accent);
+  color: white;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.agent-link:hover {
+  opacity: 0.9;
+}

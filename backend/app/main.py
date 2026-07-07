@@ -22,7 +22,7 @@ if models_base.exists():
     os.environ["MODEL_CACHE_DIR"] = str(models_base)
     print(f"[INFO] 模型路径: {models_base}")
 
-from app.api import chat, knowledge
+from app.api import chat
 from app.core.config import settings
 from app.core.redis_client import redis_client
 from app.core.vector_store import vector_store_client
@@ -75,7 +75,6 @@ app.add_middleware(
 
 # 注册路由
 app.include_router(chat.router)
-app.include_router(knowledge.router)
 
 
 # ── 生产环境：提供前端静态文件 ──

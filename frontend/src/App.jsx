@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import Sidebar from './components/Sidebar.jsx';
 import ChatWindow from './components/ChatWindow.jsx';
+import AgentWorkbench from './components/AgentWorkbench.jsx';
 import { healthCheck } from './api.js';
 
 const STORAGE_KEY = 'ai-cs-sessions';
@@ -71,6 +72,12 @@ export default function App() {
     });
   }, [activeId]);
 
+  const isAgent = window.location.pathname === '/agent' || window.location.port === '8001';
+
+  if (isAgent) {
+    return <AgentWorkbench />;
+  }
+
   return (
     <div className="app">
       <Sidebar
@@ -95,6 +102,7 @@ export default function App() {
             <div className={`status ${healthy ? 'ok' : 'off'}`}>
               {healthy ? '● 后端连接正常' : '○ 后端未连接'}
             </div>
+            <a href="/agent" className="agent-link">进入客服工作台</a>
           </div>
         </main>
       )}
