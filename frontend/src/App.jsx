@@ -72,7 +72,7 @@ export default function App() {
     });
   }, [activeId]);
 
-  const isAgent = window.location.pathname === '/agent' || window.location.port === '8001';
+  const isAgent = window.location.pathname.startsWith('/video') || window.location.pathname === '/agent' || window.location.port === '8001';
 
   if (isAgent) {
     return <AgentWorkbench />;

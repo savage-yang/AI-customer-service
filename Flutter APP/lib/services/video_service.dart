@@ -25,64 +25,93 @@ class VideoService {
   final _onMessage = StreamController<Map<String, dynamic>>.broadcast();
   Stream<Map<String, dynamic>> get onMessage => _onMessage.stream;
 
+  final _onError = StreamController<String>.broadcast();
+  Stream<String> get onError => _onError.stream;
+
   Future<void> connect(String serverUrl, {String role = 'user'}) async {
+    if (_channel != null) {
+      await disconnect();
+    }
+
     try {
       _channel = WebSocketChannel.connect(
         Uri.parse('ws://${serverUrl}/ws/video'),
       );
 
-      _channel?.stream.listen((message) {
-        final data = jsonDecode(message);
-        _onMessage.add(data);
+      _channel?.stream.listen(
+        (message) {
+          try {
+            final data = jsonDecode(message) as Map<String, dynamic>;
+            _onMessage.add(data);
 
-        switch (data['type']) {
-          case 'init':
-            isConnected = true;
-            break;
-          case 'call_created':
-            roomId = data['room_id'];
-            break;
-          case 'agent_joined':
-            _createPeerConnection();
-            break;
-          case 'offer':
-            _handleOffer(data['offer']);
-            break;
-          case 'answer':
-            _handleAnswer(data['answer']);
-            break;
-          case 'ice_candidate':
-            _handleIceCandidate(data['candidate']);
-            break;
-          case 'call_ended':
-          case 'call_rejected':
-            endCall();
-            break;
-        }
-        _onStateChanged.add(true);
-      });
+            switch (data['type']) {
+              case 'init':
+                isConnected = true;
+                break;
+              case 'call_created':
+                roomId = data['room_id'] as String?;
+                break;
+              case 'agent_joined':
+                _createPeerConnection();
+                break;
+              case 'offer':
+                _handleOffer(data['offer']);
+                break;
+              case 'answer':
+                _handleAnswer(data['answer']);
+                break;
+              case 'ice_candidate':
+                _handleIceCandidate(data['candidate']);
+                break;
+              case 'call_ended':
+              case 'call_rejected':
+                endCall();
+                break;
+            }
+            _onStateChanged.add(true);
+          } catch (e) {
+            _onError.add('消息解析错误: $e');
+          }
+        },
+        onError: (error) {
+          _onError.add('WebSocket错误: $error');
+          isConnected = false;
+          _onStateChanged.add(true);
+        },
+        onDone: () {
+          isConnected = false;
+          _onStateChanged.add(true);
+        },
+      );
 
       _channel?.sink.add(jsonEncode({'type': 'join', 'role': role}));
     } catch (e) {
-      print('WebSocket连接失败: $e');
+      print('WebSocket connect error: $e');
+      _onError.add('WebSocket连接失败: $e');
       rethrow;
     }
   }
 
-  Future<void> createCall(String name, {String issue = ''}) async {
+  Future<void> createCall(String name, {String issue = '', String sn = ''}) async {
+    if (!isConnected || _channel == null) {
+      throw Exception('WebSocket未连接');
+    }
     username = name;
     _channel?.sink.add(jsonEncode({
       'type': 'create_call',
       'username': name,
       'issue': issue,
+      'sn': sn,
     }));
   }
 
   Future<void> cancelCall() async {
-    _channel?.sink.add(jsonEncode({
-      'type': 'cancel_call',
-      'room_id': roomId,
-    }));
+    if (_channel != null && roomId != null) {
+      _channel?.sink.add(jsonEncode({
+        'type': 'cancel_call',
+        'room_id': roomId,
+      }));
+    }
     roomId = null;
   }
 
@@ -104,19 +133,18 @@ class VideoService {
         'iceServers': [
           {'urls': 'stun:stun.l.google.com:19302'},
           {'urls': 'stun:stun1.l.google.com:19302'},
+          {'urls': 'turn:fc586a2a.natappfree.cc:80?transport=tcp', 'username': 'ai-customer', 'credential': 'service123'},
         ]
       };
 
       _peerConnection = await createPeerConnection(configuration);
 
       _peerConnection?.onIceCandidate = (candidate) {
-        if (candidate != null) {
-          _channel?.sink.add(jsonEncode({
-            'type': 'ice_candidate',
-            'room_id': roomId,
-            'candidate': candidate.toMap(),
-          }));
-        }
+        _channel?.sink.add(jsonEncode({
+          'type': 'ice_candidate',
+          'room_id': roomId,
+          'candidate': candidate.toMap(),
+        }));
       };
 
       _peerConnection?.onTrack = (event) {

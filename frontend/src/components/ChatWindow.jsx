@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { chatStream } from '../api.js';
+import { chatStream, getUserId } from '../api.js';
 
 export default function ChatWindow({ sessionId, messages, onUpdateMessages }) {
   const [input, setInput] = useState('');
@@ -34,6 +34,7 @@ export default function ChatWindow({ sessionId, messages, onUpdateMessages }) {
         sessionId,
         text,
         (chunk) => {
+          // userId 由 getUserId() 自动获取
           updated[updated.length - 1] = {
             ...updated[updated.length - 1],
             content: updated[updated.length - 1].content + chunk,

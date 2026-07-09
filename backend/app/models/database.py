@@ -11,13 +11,14 @@ class Base(DeclarativeBase):
 
 
 class ChatLog(Base):
-    """对话日志表"""
+    """对话消息表（每条消息一行）"""
     __tablename__ = "chat_logs"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    session_id = Column(String(64), index=True, comment="会话ID")
-    question = Column(Text, comment="用户问题")
-    answer = Column(Text, comment="AI回答")
+    user_id = Column(String(64), index=True, nullable=False, comment="用户ID")
+    session_id = Column(String(64), index=True, nullable=False, comment="会话ID")
+    role = Column(String(16), nullable=False, comment="消息角色: user/assistant")
+    content = Column(Text, nullable=False, comment="消息内容")
     sources = Column(JSON, comment="参考来源")
     confidence = Column(Float, comment="置信度")
     latency_ms = Column(Integer, comment="响应耗时(毫秒)")

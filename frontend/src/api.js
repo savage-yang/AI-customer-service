@@ -1,11 +1,22 @@
 const API_BASE = '';
 
+/** 获取或生成持久化 user_id */
+export function getUserId() {
+  const KEY = 'ai-cs-user-id';
+  let id = localStorage.getItem(KEY);
+  if (!id) {
+    id = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    localStorage.setItem(KEY, id);
+  }
+  return id;
+}
+
 /** 发送消息，SSE 流式接收回复 */
-export async function chatStream(sessionId, question, onChunk, onError) {
+export async function chatStream(sessionId, question, onChunk, onError, userId) {
   const response = await fetch(`${API_BASE}/chat/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: sessionId, question }),
+    body: JSON.stringify({ session_id: sessionId, question, user_id: userId || getUserId() }),
   });
 
   if (!response.ok) {

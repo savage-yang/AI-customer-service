@@ -71,7 +71,10 @@ export default function AgentWorkbench() {
 
   const handleAnswer = useCallback(async (roomId) => {
     const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'turn:fc586a2a.natappfree.cc:80?transport=tcp', username: 'ai-customer', credential: 'service123' },
+      ],
     });
     pcRef.current = pc;
 

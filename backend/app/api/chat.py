@@ -25,6 +25,7 @@ async def chat(req: ChatRequest):
             async for chunk in chat_service.chat_stream(
                 session_id=session_id,
                 question=req.question,
+                user_id=req.user_id,
             ):
                 yield f"data: {chunk}\n\n"
             yield "data: [DONE]\n\n"

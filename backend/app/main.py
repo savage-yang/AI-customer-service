@@ -24,10 +24,9 @@ if models_base.exists():
 
 from app.api import chat
 from app.core.config import settings
+from app.core.database import init_db, close_db
 from app.core.redis_client import redis_client
 from app.core.vector_store import vector_store_client
-from app.core.embedding import embedding_client
-from app.services.rerank_service import rerank_service
 
 
 @asynccontextmanager
@@ -37,23 +36,16 @@ async def lifespan(app: FastAPI):
     await redis_client.connect()
     print(f"[INFO] Redis 已连接 {settings.redis_host}:{settings.redis_port}")
 
+    await init_db()
+
     # 预加载 Milvus collection 到内存（数据已持久化，不需要重新灌库）
     vector_store_client.ensure_loaded()
-
-    # 预加载 Embedding 模型（避免首次请求冷启动）
-    print(f"[INFO] 正在预加载 Embedding 模型: {settings.embedding_model_name}")
-    _ = embedding_client.embeddings
-    print(f"[INFO] Embedding 模型加载完成，维度: {embedding_client.dimension}")
-
-    # 预加载 Reranker 模型（避免首次请求冷启动）
-    print(f"[INFO] 正在预加载 Reranker 模型: {settings.reranker_model_name}")
-    rerank_service._load()
-    print(f"[INFO] Reranker 模型加载完成")
 
     print(f"[INFO] 服务已启动 http://{settings.app_host}:{settings.app_port}")
     yield
     # 关闭时
     await redis_client.disconnect()
+    await close_db()
     print("[INFO] 服务已关闭")
 
 
@@ -87,7 +79,7 @@ if _frontend_dist.exists():
     # SPA fallback：所有非 API 路径返回 index.html（支持 React Router）
     @app.get("/{full_path:path}", summary="前端页面")
     async def serve_spa(full_path: str, request: Request):
-        # 探测文件是否存在（如 favicon.ico、vite.svg）
+        # 探测文件是否存在（如 favicon.ico、vite.svg）C
         file_path = _frontend_dist / full_path
         if file_path.exists() and file_path.is_file():
             return FileResponse(file_path)
