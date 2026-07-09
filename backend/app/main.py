@@ -25,8 +25,10 @@ if models_base.exists():
 from app.api import chat
 from app.core.config import settings
 from app.core.database import init_db, close_db
+from app.core.embedding import embedding_client
 from app.core.redis_client import redis_client
 from app.core.vector_store import vector_store_client
+from app.services.rerank_service import rerank_service
 
 
 @asynccontextmanager
@@ -40,6 +42,10 @@ async def lifespan(app: FastAPI):
 
     # 预加载 Milvus collection 到内存（数据已持久化，不需要重新灌库）
     vector_store_client.ensure_loaded()
+
+    # 预热 Embedding 和 Reranker 模型到 GPU（避免首次请求冷启动）
+    embedding_client.preload()
+    rerank_service.preload()
 
     print(f"[INFO] 服务已启动 http://{settings.app_host}:{settings.app_port}")
     yield

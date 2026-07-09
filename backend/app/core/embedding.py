@@ -38,6 +38,12 @@ class EmbeddingClient:
             )
         return self._embeddings
 
+    def preload(self):
+        """启动时预热加载模型到 GPU"""
+        _ = self.embeddings
+        device = self.embeddings.device
+        print(f"[Embedding] 模型已加载到 {device}")
+
     @property
     def dimension(self) -> int:
         """获取 embedding 向量维度"""

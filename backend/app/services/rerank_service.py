@@ -41,6 +41,14 @@ class RerankService:
                 self._model = self._model.to(device)
             self._device = device
 
+    def preload(self):
+        """启动时预热加载模型到 GPU"""
+        self._load()
+        if self._device != "cpu":
+            print(f"[Rerank] 模型已加载到 {self._device}")
+        else:
+            print("[Rerank] 模型已加载到 CPU")
+
     def _compute_scores(self, pairs: list[list[str]]) -> list[float]:
         """计算 query-document 对的相关性分数（已归一化到 0-1）"""
         self._load()

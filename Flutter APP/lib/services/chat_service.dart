@@ -39,7 +39,9 @@ class ChatService {
         'session_id': _sessionId,
         'user_id': _userId,
       });
-      request.write(body);
+      final bodyBytes = utf8.encode(body);
+      request.headers.set('Content-Length', bodyBytes.length.toString());
+      request.add(bodyBytes);
 
       final response = await request.close();
       final completer = Completer<String>();
@@ -106,7 +108,9 @@ class ChatService {
         'session_id': _sessionId,
         'user_id': _userId,
       });
-      request.write(body);
+      final bodyBytes = utf8.encode(body);
+      request.headers.set('Content-Length', bodyBytes.length.toString());
+      request.add(bodyBytes);
 
       final response = await request.close();
 

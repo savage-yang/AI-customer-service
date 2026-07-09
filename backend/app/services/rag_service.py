@@ -46,17 +46,18 @@ class RAGService:
             messages.append({"role": "user", "content": f"对话历史：\n{history}"})
         messages.append({"role": "user", "content": f"问题：{question}\n\n请判断是否需要检索知识库？"})
 
-        response = await llm_client.client.chat.completions.create(
-            model=settings.llm_model_name,
-            messages=[
-                {"role": "user", "content": prompt},
-                *messages,
-            ],
-            temperature=0.0,
-            max_tokens=10,
-            stream=False,
-            extra_body={"chat_template_kwargs": {"enable_thinking": False}}
-        )
+        async with llm_client.session() as client:
+            response = await client.chat.completions.create(
+                model=settings.llm_model_name,
+                messages=[
+                    {"role": "user", "content": prompt},
+                    *messages,
+                ],
+                temperature=0.0,
+                max_tokens=10,
+                stream=False,
+                extra_body={"chat_template_kwargs": {"enable_thinking": False}}
+            )
 
         content = response.choices[0].message.content
         if content is None:
@@ -98,21 +99,22 @@ class RAGService:
         user_prompt = "\n\n".join(parts)
         system_prompt = SYSTEM_PROMPT.format(knowledge_topics=settings.knowledge_base_topics)
 
-        stream = await llm_client.client.chat.completions.create(
-            model=settings.llm_model_name,
-            messages=[
-                {"role": "user", "content": system_prompt + "\n\n" + user_prompt},
-            ],
-            temperature=settings.llm_temperature,
-            max_tokens=settings.llm_max_tokens,
-            stream=True,
-            extra_body={"chat_template_kwargs": {"enable_thinking": False}}
-        )
+        async with llm_client.session() as client:
+            stream = await client.chat.completions.create(
+                model=settings.llm_model_name,
+                messages=[
+                    {"role": "user", "content": system_prompt + "\n\n" + user_prompt},
+                ],
+                temperature=settings.llm_temperature,
+                max_tokens=settings.llm_max_tokens,
+                stream=True,
+                extra_body={"chat_template_kwargs": {"enable_thinking": False}}
+            )
 
-        async for chunk in stream:
-            content = chunk.choices[0].delta.content
-            if content:
-                yield content
+            async for chunk in stream:
+                content = chunk.choices[0].delta.content
+                if content:
+                    yield content
 
 
 rag_service = RAGService()
