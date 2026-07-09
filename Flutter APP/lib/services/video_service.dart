@@ -132,8 +132,8 @@ class VideoService {
       final configuration = {
         'iceServers': [
           {'urls': 'stun:stun.l.google.com:19302'},
-          {'urls': 'stun:stun1.l.google.com:19302'},
-          {'urls': 'turn:fc586a2a.natappfree.cc:80?transport=tcp', 'username': 'ai-customer', 'credential': 'service123'},
+cc          {'urls': 'stun:stun1.l.google.com:19302'},
+          {'urls': 'stun:stun2.l.google.com:19302'},
         ]
       };
 
@@ -260,8 +260,8 @@ class VideoService {
   Future<void> disconnect() async {
     await _disposePeerConnection();
     await _stopLocalStream();
-    _channel?.sink.close();
-    _channel?.stream.drain();
+    await _channel?.sink.close();
+    _channel = null;
     isConnected = false;
     isCalling = false;
     roomId = null;
