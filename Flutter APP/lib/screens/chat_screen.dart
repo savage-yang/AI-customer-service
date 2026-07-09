@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/chat_provider.dart';
 import 'video_support_screen.dart';
+import 'profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -208,6 +209,13 @@ class _ChatScreenState extends State<ChatScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const VideoSupportScreen()),
+    );
+  }
+
+  void _navigateToProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ProfileScreen()),
     );
   }
 
@@ -418,6 +426,21 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       child: Row(
         children: [
+          GestureDetector(
+            onTap: _navigateToProfile,
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: const Color(0xFFEEF2FF),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0x225664FF)),
+              ),
+              alignment: Alignment.center,
+              child: const Icon(Icons.person_outline, color: Color(0xFF5664FF), size: 22),
+            ),
+          ),
+          const SizedBox(width: 10),
           GestureDetector(
             onTap: createNewChat,
             child: Container(
