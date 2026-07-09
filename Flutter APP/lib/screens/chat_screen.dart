@@ -169,16 +169,17 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             const Spacer(),
             GestureDetector(
-              onTap: _navigateToVideoSupport,
+              onTap: _navigateToProfile,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3DC882),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: const Color(0x225C6680)),
                   boxShadow: const [
                     BoxShadow(
-                      color: Color(0x333DC882),
-                      blurRadius: 10,
+                      color: Color(0x1A3A436D),
+                      blurRadius: 8,
                       offset: Offset(0, 4),
                     ),
                   ],
@@ -186,12 +187,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.video_call, color: Colors.white, size: 16),
+                    Icon(Icons.person_outline, color: Color(0xFF5664FF), size: 16),
                     SizedBox(width: 6),
                     Text(
-                      '视频客服',
+                      '我的',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Color(0xFF5664FF),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -427,17 +428,23 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: _navigateToProfile,
+            onTap: _navigateToVideoSupport,
             child: Container(
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: const Color(0xFFEEF2FF),
+                color: const Color(0xFF3DC882),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0x225664FF)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x333DC882),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               alignment: Alignment.center,
-              child: const Icon(Icons.person_outline, color: Color(0xFF5664FF), size: 22),
+              child: const Icon(Icons.video_call, color: Colors.white, size: 22),
             ),
           ),
           const SizedBox(width: 10),

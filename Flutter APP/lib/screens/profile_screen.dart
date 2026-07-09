@@ -192,15 +192,6 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             ),
           ),
-          const SizedBox(width: 14),
-          const Text(
-            '我的',
-            style: TextStyle(
-              color: Color(0xFF161B2F),
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
         ],
       ),
     );

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../config/app_config.dart';
 import '../providers/video_provider.dart';
 import 'video_call_screen.dart';
+import 'video_history_screen.dart';
 
 class VideoSupportScreen extends StatefulWidget {
   const VideoSupportScreen({super.key});
@@ -131,6 +132,13 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
       _isWaiting = false;
       _statusMessage = '';
     });
+  }
+
+  void _navigateToHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const VideoHistoryScreen()),
+    );
   }
 
   Future<bool> _requestPermissions() async {
@@ -264,32 +272,36 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
           ),
         ),
         const Spacer(),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFF3DC882),
-            borderRadius: BorderRadius.circular(999),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x333DC882),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.video_call, color: Colors.white, size: 16),
-              SizedBox(width: 6),
-              Text(
-                '视频客服',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
+        GestureDetector(
+          onTap: _navigateToHistory,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: const Color(0x225C6680)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1A3A436D),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
                 ),
-              ),
-            ],
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.history, color: const Color(0xFF5664FF), size: 16),
+                const SizedBox(width: 6),
+                const Text(
+                  '视频历史',
+                  style: TextStyle(
+                    color: Color(0xFF5664FF),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
