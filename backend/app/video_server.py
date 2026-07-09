@@ -187,15 +187,30 @@ async def remote_video_websocket(websocket: WebSocket):
                     "room_id": room_id
                 }))
 
+                print(f"[Video] create_call: room_id={room_id}, username={username}, agent_ws_list长度={len(agent_ws_list)}")
+
+                new_call_msg = json.dumps({
+                    "type": "new_call",
+                    "room_id": room_id,
+                    "user_id": username,
+                    "username": username,
+                    "issue": issue,
+                    "status": "waiting",
+                    "created_at": rooms[room_id].created_at.isoformat(),
+                })
+
+                failed = []
                 for ws in agent_ws_list:
-                    await ws.send_text(json.dumps({
-                        "type": "new_call",
-                        "room_id": room_id,
-                        "username": username,
-                        "issue": issue,
-                        "status": "waiting",
-                        "created_at": rooms[room_id].created_at.isoformat(),
-                    }))
+                    try:
+                        await ws.send_text(new_call_msg)
+                        print(f"[Video] new_call 已推送给 agent WebSocket")
+                    except Exception as e:
+                        print(f"[Video] 推送 new_call 失败: {e}")
+                        failed.append(ws)
+
+                for ws in failed:
+                    if ws in agent_ws_list:
+                        agent_ws_list.remove(ws)
 
             elif msg_type == "cancel_call":
                 room_id = message.get("room_id")
@@ -355,6 +370,7 @@ async def remote_video_websocket(websocket: WebSocket):
 async def agent_websocket(websocket: WebSocket):
     await websocket.accept()
     agent_ws_list.append(websocket)
+    print(f"[Video] Agent WebSocket 已连接, 当前 agent 数量: {len(agent_ws_list)}")
 
     waiting_calls = []
     for room in rooms.values():
@@ -362,6 +378,8 @@ async def agent_websocket(websocket: WebSocket):
             waiting_calls.append({
                 "room_id": room.room_id,
                 "user_id": room.user_id,
+                "username": room.user_id,
+                "issue": getattr(room, "issue", ""),
                 "status": room.status,
                 "created_at": room.created_at.isoformat(),
             })
@@ -375,7 +393,9 @@ async def agent_websocket(websocket: WebSocket):
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        agent_ws_list.remove(websocket)
+        if websocket in agent_ws_list:
+            agent_ws_list.remove(websocket)
+        print(f"[Video] Agent WebSocket 断开, 当前 agent 数量: {len(agent_ws_list)}")
 
 
 app = FastAPI(title="视频服务", version="1.0.0")

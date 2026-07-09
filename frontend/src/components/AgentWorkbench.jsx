@@ -73,7 +73,7 @@ export default function AgentWorkbench() {
     const pc = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'turn:fc586a2a.natappfree.cc:80?transport=tcp', username: 'ai-customer', credential: 'service123' },
+        { urls: 'stun:stun1.l.google.com:19302' },
       ],
     });
     pcRef.current = pc;

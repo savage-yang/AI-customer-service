@@ -33,6 +33,8 @@ class VideoService {
       await disconnect();
     }
 
+    final completer = Completer<void>();
+
     try {
       _channel = WebSocketChannel.connect(
         Uri.parse('ws://${serverUrl}/ws/video'),
@@ -47,6 +49,9 @@ class VideoService {
             switch (data['type']) {
               case 'init':
                 isConnected = true;
+                if (!completer.isCompleted) {
+                  completer.complete();
+                }
                 break;
               case 'call_created':
                 roomId = data['room_id'] as String?;
@@ -76,15 +81,23 @@ class VideoService {
         onError: (error) {
           _onError.add('WebSocket错误: $error');
           isConnected = false;
+          if (!completer.isCompleted) {
+            completer.completeError(Exception('WebSocket连接错误: $error'));
+          }
           _onStateChanged.add(true);
         },
         onDone: () {
           isConnected = false;
+          if (!completer.isCompleted) {
+            completer.completeError(Exception('WebSocket连接已关闭'));
+          }
           _onStateChanged.add(true);
         },
       );
 
       _channel?.sink.add(jsonEncode({'type': 'join', 'role': role}));
+
+      await completer.future.timeout(const Duration(seconds: 10));
     } catch (e) {
       print('WebSocket connect error: $e');
       _onError.add('WebSocket连接失败: $e');
