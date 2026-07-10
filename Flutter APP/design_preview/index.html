@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Customer Care Redesign Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+    <div class="ambient ambient-c"></div>
+
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">AI CUSTOMER CARE APP REDESIGN</p>
+          <h1>把你的客服 App 做成更像“高端品牌服务中枢”</h1>
+          <p class="hero-text">
+            保留现有业务逻辑，只升级视觉语言。新的方向强调专业感、速度感和可信赖的售后体验，让 AI
+            客服、视频协助、售后记录三条能力线看起来属于同一个成熟产品。
+          </p>
+
+          <div class="hero-actions">
+            <button class="primary-btn" data-target="chat">查看聊天页</button>
+            <button class="secondary-btn" data-target="video">查看视频客服</button>
+          </div>
+
+          <div class="design-notes">
+            <article class="note-card">
+              <span class="note-kicker">01</span>
+              <h2>更高级的品牌气质</h2>
+              <p>深色背景结合霓虹蓝绿渐变，避免“模板感”，更像高端智能硬件品牌。</p>
+            </article>
+            <article class="note-card">
+              <span class="note-kicker">02</span>
+              <h2>信息分层更明确</h2>
+              <p>把建议入口、实时状态、售后摘要拆成不同强度的卡片层级，阅读更轻松。</p>
+            </article>
+            <article class="note-card">
+              <span class="note-kicker">03</span>
+              <h2>同一套系统覆盖全流程</h2>
+              <p>从 AI 对话到视频服务，再到我的设备与工单历史，都共用同一视觉系统。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="device-stage">
+          <div class="phone-stack">
+            <article class="phone-card active" data-screen="chat">
+              <div class="status-bar">
+                <span>9:41</span>
+                <span>5G 98%</span>
+              </div>
+              <div class="utility-row">
+                <button class="history-chip">
+                  <span class="history-icon">≡</span>
+                  <span>历史对话</span>
+                </button>
+              </div>
+              <div class="app-head">
+                <div>
+                  <p class="mini-label">智能客服中枢</p>
+                  <h3>AI Support</h3>
+                </div>
+                <div class="avatar-chip">L9</div>
+              </div>
+              <section class="welcome-banner">
+                <span class="tag tag-hot">Priority Care</span>
+                <h4>欢迎回来，今天想解决什么问题？</h4>
+                <p>AI 先帮你诊断，复杂问题再一键转视频专家。</p>
+              </section>
+              <section class="quick-grid">
+                <button class="quick-pill">退款进度</button>
+                <button class="quick-pill">物流查询</button>
+                <button class="quick-pill">设备异常</button>
+                <button class="quick-pill">会员权益</button>
+              </section>
+              <section class="chat-flow">
+                <div class="bubble bubble-user">X1 Pro 一直报错 E07，能帮我看看吗？</div>
+                <div class="bubble bubble-ai">
+                  <span class="bubble-title">AIVA</span>
+                  已识别为设备运行异常，我可以先给你做自检，也可以直接生成维修工单并接入视频专家。
+                </div>
+                <div class="action-card">
+                  <div>
+                    <p class="action-title">推荐处理路径</p>
+                    <p class="action-desc">2 分钟完成自检，未解决自动升级售后支持</p>
+                  </div>
+                  <button>开始排查</button>
+                </div>
+              </section>
+              <div class="composer">
+                <button class="icon-btn accent">+</button>
+                <div class="input-shell">输入你的问题，或发送设备型号 / SN</div>
+                <button class="send-btn">发送</button>
+              </div>
+            </article>
+
+            <article class="phone-card" data-screen="video">
+              <div class="status-bar">
+                <span>9:41</span>
+                <span>5G 98%</span>
+              </div>
+              <div class="utility-row utility-row-end">
+                <button class="history-chip">
+                  <span class="history-icon">◷</span>
+                  <span>会议历史</span>
+                </button>
+              </div>
+              <div class="app-head">
+                <div>
+                  <p class="mini-label">实时专家协助</p>
+                  <h3>Video Support</h3>
+                </div>
+                <div class="signal-dot"></div>
+              </div>
+              <section class="video-hero">
+                <div class="video-badge">Live Assistance</div>
+                <h4>面对面协助，解决复杂售后问题</h4>
+                <p>适合设备异常、安装指导、清洁维修、功能排障。</p>
+              </section>
+              <section class="form-card">
+                <label>你的姓名</label>
+                <div class="field">Luna Chen</div>
+                <label>设备 SN</label>
+                <div class="field">SN-2024-0815-AX91</div>
+                <label>问题描述</label>
+                <div class="field field-large">机器启动后反复报错，底座无法回充。</div>
+              </section>
+              <section class="queue-card">
+                <div class="queue-top">
+                  <span>专家在线匹配中</span>
+                  <strong>00:36</strong>
+                </div>
+                <div class="queue-bar">
+                  <span></span>
+                </div>
+                <p>已为你匹配“清洁电器高级工程师”，预计 1 分钟内接入。</p>
+              </section>
+              <button class="cta-large">发起视频支持</button>
+            </article>
+
+            <article class="phone-card" data-screen="profile">
+              <div class="status-bar">
+                <span>9:41</span>
+                <span>5G 98%</span>
+              </div>
+              <div class="profile-hero">
+                <div class="profile-top">
+                  <div class="profile-avatar">L</div>
+                  <div>
+                    <p class="mini-label">尊享服务会员</p>
+                    <h3>Luna Chen</h3>
+                  </div>
+                </div>
+                <div class="metrics">
+                  <div>
+                    <strong>03</strong>
+                    <span>已绑定设备</span>
+                  </div>
+                  <div>
+                    <strong>12</strong>
+                    <span>售后记录</span>
+                  </div>
+                  <div>
+                    <strong>2.4h</strong>
+                    <span>累计协助</span>
+                  </div>
+                </div>
+              </div>
+              <section class="section-block">
+                <div class="section-title">
+                  <span>我的设备</span>
+                  <span class="ghost-link">查看全部</span>
+                </div>
+                <div class="device-list">
+                  <article class="list-card">
+                    <div>
+                      <h4>X1 Pro 智能洗地机</h4>
+                      <p>保修至 2026.08.15</p>
+                    </div>
+                    <span class="state-chip state-ok">运行正常</span>
+                  </article>
+                  <article class="list-card">
+                    <div>
+                      <h4>R7 扫地机器人</h4>
+                      <p>当前存在售后工单</p>
+                    </div>
+                    <span class="state-chip state-warn">维修处理中</span>
+                  </article>
+                </div>
+              </section>
+              <section class="section-block">
+                <div class="section-title">
+                  <span>最近售后摘要</span>
+                  <span class="ghost-link">进入历史</span>
+                </div>
+                <article class="summary-card">
+                  <div class="summary-head">
+                    <span class="summary-badge">AI Summary</span>
+                    <span class="summary-date">2026.07.10</span>
+                  </div>
+                  <h4>底座回充异常</h4>
+                  <p>已完成远程初检，建议视频指导确认电极接触与底座供电状态。</p>
+                </article>
+              </section>
+            </article>
+          </div>
+
+          <div class="screen-tabs">
+            <button class="tab-btn active" data-target="chat">AI 对话</button>
+            <button class="tab-btn" data-target="video">视频客服</button>
+            <button class="tab-btn" data-target="profile">我的服务</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="system-panel">
+        <div class="panel-head">
+          <p class="eyebrow">VISUAL SYSTEM</p>
+          <h2>这次重设计我建议保留的业务骨架</h2>
+        </div>
+        <div class="panel-grid">
+          <article class="panel-card">
+            <h3>入口不改</h3>
+            <p>仍然以聊天页为首页，保留推荐问题、历史会话、发送消息和转人工能力。</p>
+          </article>
+          <article class="panel-card">
+            <h3>转视频更自然</h3>
+            <p>把视频客服从“另一个页面”改成更像升级服务流，强调状态、排队和专家匹配。</p>
+          </article>
+          <article class="panel-card">
+            <h3>个人中心更像服务资产页</h3>
+            <p>突出设备、保修、工单、视频协助记录，让售后价值看起来更完整。</p>
+          </article>
+          <article class="panel-card">
+            <h3>统一高级质感</h3>
+            <p>大量使用深底、模糊、渐变描边、荧光按钮和更精细的间距系统。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panorama-section">
+        <div class="panel-head">
+          <p class="eyebrow">FULL SCREEN GALLERY</p>
+          <h2>每个界面的完整全景预览</h2>
+        </div>
+
+        <div class="panorama-grid">
+          <article class="panorama-item">
+            <div class="panorama-top">
+              <span class="panorama-kicker">01</span>
+              <div>
+                <h3>AI 对话首页</h3>
+                <p>首屏聚焦欢迎区、快捷问题、对话流和智能升级服务入口。</p>
+              </div>
+            </div>
+
+            <div class="panorama-phone">
+              <article class="phone-card active static-card" data-screen="chat-full">
+                <div class="status-bar">
+                  <span>9:41</span>
+                  <span>5G 98%</span>
+                </div>
+                <div class="utility-row">
+                  <button class="history-chip">
+                    <span class="history-icon">≡</span>
+                    <span>历史对话</span>
+                  </button>
+                </div>
+                <div class="app-head">
+                  <div>
+                    <p class="mini-label">智能客服中枢</p>
+                    <h3>AI Support</h3>
+                  </div>
+                  <div class="avatar-chip">L9</div>
+                </div>
+                <section class="welcome-banner">
+                  <span class="tag tag-hot">Priority Care</span>
+                  <h4>欢迎回来，今天想解决什么问题？</h4>
+                  <p>AI 先帮你诊断，复杂问题再一键转视频专家。</p>
+                </section>
+                <section class="quick-grid">
+                  <button class="quick-pill">退款进度</button>
+                  <button class="quick-pill">物流查询</button>
+                  <button class="quick-pill">设备异常</button>
+                  <button class="quick-pill">会员权益</button>
+                </section>
+                <section class="chat-flow">
+                  <div class="bubble bubble-user">X1 Pro 一直报错 E07，能帮我看看吗？</div>
+                  <div class="bubble bubble-ai">
+                    <span class="bubble-title">AIVA</span>
+                    已识别为设备运行异常，我可以先给你做自检，也可以直接生成维修工单并接入视频专家。
+                  </div>
+                  <div class="action-card">
+                    <div>
+                      <p class="action-title">推荐处理路径</p>
+                      <p class="action-desc">2 分钟完成自检，未解决自动升级售后支持</p>
+                    </div>
+                    <button>开始排查</button>
+                  </div>
+                </section>
+                <div class="composer">
+                  <button class="icon-btn accent">+</button>
+                  <div class="input-shell">输入你的问题，或发送设备型号 / SN</div>
+                  <button class="send-btn">发送</button>
+                </div>
+              </article>
+            </div>
+          </article>
+
+          <article class="panorama-item">
+            <div class="panorama-top">
+              <span class="panorama-kicker">02</span>
+              <div>
+                <h3>视频客服页</h3>
+                <p>突出实时专家服务、信息采集、等待状态与升级协助的专业感。</p>
+              </div>
+            </div>
+
+            <div class="panorama-phone">
+              <article class="phone-card active static-card" data-screen="video-full">
+                <div class="status-bar">
+                  <span>9:41</span>
+                  <span>5G 98%</span>
+                </div>
+                <div class="utility-row utility-row-end">
+                  <button class="history-chip">
+                    <span class="history-icon">◷</span>
+                    <span>会议历史</span>
+                  </button>
+                </div>
+                <div class="app-head">
+                  <div>
+                    <p class="mini-label">实时专家协助</p>
+                    <h3>Video Support</h3>
+                  </div>
+                  <div class="signal-dot"></div>
+                </div>
+                <section class="video-hero">
+                  <div class="video-badge">Live Assistance</div>
+                  <h4>面对面协助，解决复杂售后问题</h4>
+                  <p>适合设备异常、安装指导、清洁维修、功能排障。</p>
+                </section>
+                <section class="form-card">
+                  <label>你的姓名</label>
+                  <div class="field">Luna Chen</div>
+                  <label>设备 SN</label>
+                  <div class="field">SN-2024-0815-AX91</div>
+                  <label>问题描述</label>
+                  <div class="field field-large">机器启动后反复报错，底座无法回充。</div>
+                </section>
+                <section class="queue-card">
+                  <div class="queue-top">
+                    <span>专家在线匹配中</span>
+                    <strong>00:36</strong>
+                  </div>
+                  <div class="queue-bar">
+                    <span></span>
+                  </div>
+                  <p>已为你匹配“清洁电器高级工程师”，预计 1 分钟内接入。</p>
+                </section>
+                <button class="cta-large">发起视频支持</button>
+              </article>
+            </div>
+          </article>
+
+          <article class="panorama-item">
+            <div class="panorama-top">
+              <span class="panorama-kicker">03</span>
+              <div>
+                <h3>我的服务页</h3>
+                <p>把设备、保修、工单和售后摘要整理成更像品牌服务资产中心的结构。</p>
+              </div>
+            </div>
+
+            <div class="panorama-phone">
+              <article class="phone-card active static-card" data-screen="profile-full">
+                <div class="status-bar">
+                  <span>9:41</span>
+                  <span>5G 98%</span>
+                </div>
+                <div class="profile-hero">
+                  <div class="profile-top">
+                    <div class="profile-avatar">L</div>
+                    <div>
+                      <p class="mini-label">尊享服务会员</p>
+                      <h3>Luna Chen</h3>
+                    </div>
+                  </div>
+                  <div class="metrics">
+                    <div>
+                      <strong>03</strong>
+                      <span>已绑定设备</span>
+                    </div>
+                    <div>
+                      <strong>12</strong>
+                      <span>售后记录</span>
+                    </div>
+                    <div>
+                      <strong>2.4h</strong>
+                      <span>累计协助</span>
+                    </div>
+                  </div>
+                </div>
+                <section class="section-block">
+                  <div class="section-title">
+                    <span>我的设备</span>
+                    <span class="ghost-link">查看全部</span>
+                  </div>
+                  <div class="device-list">
+                    <article class="list-card">
+                      <div>
+                        <h4>X1 Pro 智能洗地机</h4>
+                        <p>保修至 2026.08.15</p>
+                      </div>
+                      <span class="state-chip state-ok">运行正常</span>
+                    </article>
+                    <article class="list-card">
+                      <div>
+                        <h4>R7 扫地机器人</h4>
+                        <p>当前存在售后工单</p>
+                      </div>
+                      <span class="state-chip state-warn">维修处理中</span>
+                    </article>
+                  </div>
+                </section>
+                <section class="section-block">
+                  <div class="section-title">
+                    <span>最近售后摘要</span>
+                    <span class="ghost-link">进入历史</span>
+                  </div>
+                  <article class="summary-card">
+                    <div class="summary-head">
+                      <span class="summary-badge">AI Summary</span>
+                      <span class="summary-date">2026.07.10</span>
+                    </div>
+                    <h4>底座回充异常</h4>
+                    <p>已完成远程初检，建议视频指导确认电极接触与底座供电状态。</p>
+                  </article>
+                </section>
+              </article>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+  </html>

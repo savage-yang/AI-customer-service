@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
 import '../config/app_config.dart';
 import '../providers/video_provider.dart';
 import 'video_call_screen.dart';
@@ -15,14 +17,44 @@ class VideoSupportScreen extends StatefulWidget {
 }
 
 class _VideoSupportScreenState extends State<VideoSupportScreen> {
-  final _nameController = TextEditingController();
-  final _snController = TextEditingController();
-  final _issueController = TextEditingController();
+  final _nameController = TextEditingController(text: 'Luna Chen');
+  final _snController = TextEditingController(text: 'SN-2024-0815-AX91');
+  final _issueController =
+      TextEditingController(text: '机器启动后反复报错，底座无法回充。');
+
   bool _isConnecting = false;
   bool _isWaiting = false;
   String _statusMessage = '';
   StreamSubscription? _messageSubscription;
   StreamSubscription? _errorSubscription;
+
+  static const Color _textPrimary = Color(0xFFECF3FF);
+  static const Color _textMuted = Color(0xFFB8C7DE);
+  static const Color _stroke = Color(0x2EFFFFFF);
+  static const Color _panel = Color(0xDD18253A);
+  static const Color _panelSoft = Color(0xC022314A);
+  static const Color _accent = Color(0xFF75F6D1);
+
+  BoxDecoration _glassCard({
+    Gradient? gradient,
+    Color color = _panel,
+    BorderRadius? radius,
+    Border? border,
+  }) {
+    return BoxDecoration(
+      color: gradient == null ? color : null,
+      gradient: gradient,
+      borderRadius: radius ?? BorderRadius.circular(24),
+      border: border ?? Border.all(color: _stroke),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x66000000),
+          blurRadius: 28,
+          offset: Offset(0, 16),
+        ),
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -31,7 +63,9 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
   }
 
   void _listenToMessages() {
-    final service = Provider.of<VideoServiceProvider>(context, listen: false).service;
+    final service =
+        Provider.of<VideoServiceProvider>(context, listen: false).service;
+
     _messageSubscription = service.onMessage.listen((message) {
       switch (message['type']) {
         case 'init':
@@ -43,19 +77,19 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
         case 'call_created':
           setState(() {
             _isWaiting = true;
-            _statusMessage = '正在等待客服接听...';
+            _statusMessage = '专家在线匹配中';
           });
           break;
         case 'agent_joined':
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => VideoCallScreen()),
+            MaterialPageRoute(builder: (_) => const VideoCallScreen()),
           );
           break;
         case 'call_rejected':
           setState(() {
             _isWaiting = false;
-            _statusMessage = '客服已拒绝请求';
+            _statusMessage = '本次接入请求已被取消';
           });
           break;
         case 'call_canceled':
@@ -86,10 +120,10 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
   }
 
   Future<void> _connectAndCall() async {
-    if (_nameController.text.isEmpty) {
+    if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('请输入您的姓名'),
+          content: const Text('请输入你的姓名'),
           backgroundColor: const Color(0xFFFF8478),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -113,20 +147,26 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
     });
 
     try {
-      final service = Provider.of<VideoServiceProvider>(context, listen: false).service;
+      final service =
+          Provider.of<VideoServiceProvider>(context, listen: false).service;
       await service.connect(AppConfig.videoServerUrl);
-      await service.createCall(_nameController.text, issue: _issueController.text, sn: _snController.text);
+      await service.createCall(
+        _nameController.text,
+        issue: _issueController.text,
+        sn: _snController.text,
+      );
     } catch (e) {
       setState(() {
         _isConnecting = false;
         _isWaiting = false;
-        _statusMessage = '连接失败: $e';
+        _statusMessage = '连接失败：$e';
       });
     }
   }
 
   Future<void> _cancelCall() async {
-    final service = Provider.of<VideoServiceProvider>(context, listen: false).service;
+    final service =
+        Provider.of<VideoServiceProvider>(context, listen: false).service;
     await service.cancelCall();
     setState(() {
       _isWaiting = false;
@@ -161,10 +201,11 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
       );
     }
 
-    if (cameraStatus.isPermanentlyDenied || microphoneStatus.isPermanentlyDenied) {
+    if (cameraStatus.isPermanentlyDenied ||
+        microphoneStatus.isPermanentlyDenied) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('权限已被永久拒绝，请在设置中开启权限'),
+          content: const Text('权限已被永久拒绝，请在系统设置中开启'),
           backgroundColor: const Color(0xFFFF8478),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -190,9 +231,9 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFF8F9FF),
-              Color(0xFFF6F7FB),
-              Color(0xFFEEF2FF),
+              Color(0xFF0E1930),
+              Color(0xFF11203A),
+              Color(0xFF0A1324),
             ],
           ),
         ),
@@ -201,22 +242,20 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _buildHeader(),
-                const SizedBox(height: 20),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        _buildHeroCard(),
+                        _buildTopBar(),
+                        const SizedBox(height: 12),
+                        _buildTitleCard(),
                         const SizedBox(height: 20),
-                        if (!_isWaiting) ...[
-                          _buildInputCard(),
-                          const SizedBox(height: 24),
-                          _buildCallButton(),
-                        ] else ...[
-                          _buildWaitingCard(),
-                        ],
-                        if (_statusMessage.isNotEmpty && !_isConnecting && !_isWaiting)
+                        _buildHeroCard(),
+                        const SizedBox(height: 14),
+                        if (!_isWaiting) _buildInputCard() else _buildWaitingCard(),
+                        if (_statusMessage.isNotEmpty &&
+                            !_isConnecting &&
+                            !_isWaiting)
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: Text(
@@ -235,6 +274,8 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 16),
+                if (!_isWaiting) _buildCallButton(),
               ],
             ),
           ),
@@ -243,26 +284,26 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildTopBar() {
     return Row(
       children: [
         GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.72),
-              borderRadius: BorderRadius.circular(999),
+            decoration: _glassCard(
+              color: _panelSoft,
+              radius: BorderRadius.circular(999),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.arrow_back_ios_new, size: 14, color: Color(0xFF161B2F)),
+                Icon(Icons.arrow_back_ios_new, size: 14, color: _textPrimary),
                 SizedBox(width: 4),
                 Text(
                   '返回',
                   style: TextStyle(
-                    color: Color(0xFF161B2F),
+                    color: _textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -276,27 +317,19 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
           onTap: _navigateToHistory,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: const Color(0x225C6680)),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1A3A436D),
-                  blurRadius: 8,
-                  offset: Offset(0, 4),
-                ),
-              ],
+            decoration: _glassCard(
+              color: _panelSoft,
+              radius: BorderRadius.circular(999),
             ),
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.history, color: const Color(0xFF5664FF), size: 16),
-                const SizedBox(width: 6),
-                const Text(
-                  '视频历史',
+                Icon(Icons.history, color: _accent, size: 16),
+                SizedBox(width: 6),
+                Text(
+                  '会议历史',
                   style: TextStyle(
-                    color: Color(0xFF5664FF),
+                    color: _textPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -308,205 +341,286 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
     );
   }
 
-  Widget _buildHeroCard() {
+  Widget _buildTitleCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF232A55), Color(0xFF5664FF), Color(0xFF7D82FF)],
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x335664FF),
-            blurRadius: 30,
-            offset: Offset(0, 12),
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+      decoration: _glassCard(
+        color: const Color(0xEE22324B),
+        radius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0x409AB9D4)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          const SizedBox(height: 4),
-          const Text(
-            '视频客服服务',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.w800,
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '实时专家协助',
+                  style: TextStyle(
+                    color: _textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Video Support',
+                  style: TextStyle(
+                    color: _textPrimary,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.8,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            '遇到复杂问题？与客服面对面实时视频沟通，快速解决您的问题。',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 15,
-              height: 1.55,
+          Container(
+            width: 16,
+            height: 16,
+            decoration: BoxDecoration(
+              color: _accent,
+              borderRadius: BorderRadius.circular(999),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0xAA75F6D1),
+                  blurRadius: 26,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              _buildFeatureItem(Icons.security, '安全加密'),
-              const SizedBox(width: 16),
-              _buildFeatureItem(Icons.speed, '高清流畅'),
-              const SizedBox(width: 16),
-              _buildFeatureItem(Icons.support_agent, '专业客服'),
-            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFeatureItem(IconData icon, String text) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.16),
-            borderRadius: BorderRadius.circular(8),
+  Widget _buildHeroCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(22),
+      decoration: _glassCard(
+        color: const Color(0xE8233652),
+        radius: BorderRadius.circular(28),
+        border: Border.all(color: const Color(0x3D9AB9D4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: Color(0xFF305564),
+              borderRadius: BorderRadius.all(Radius.circular(999)),
+              boxShadow: [
+                BoxShadow(
+                  color: _accent.withValues(alpha: 0.2),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Text(
+                'Live Assistance',
+                style: TextStyle(
+                  color: _accent,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
           ),
-          child: Icon(icon, size: 14, color: Colors.white),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+          SizedBox(height: 22),
+          Text(
+            '面对面协助，解决复杂售后问题',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              height: 1.12,
+              letterSpacing: -0.8,
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: 18),
+          Text(
+            '适合设备异常、安装指导、清洁维修、功能排障等需要专家实时介入的场景。',
+            style: TextStyle(
+              color: Color(0xFF9DAEC9),
+              fontSize: 17,
+              height: 1.65,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildInputCard() {
     return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.94),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x225C6680)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A3A436D),
-            blurRadius: 24,
-            offset: Offset(0, 10),
-          ),
-        ],
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCard(
+        color: _panelSoft,
+        radius: BorderRadius.circular(28),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '填写信息',
-            style: TextStyle(
-              color: Color(0xFF161B2F),
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            '请填写您的信息，方便客服快速了解您的问题',
-            style: TextStyle(
-              color: Color(0xFF6A728C),
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 18),
-          _buildTextField(
-            controller: _nameController,
-            label: '您的姓名',
-            hint: '请输入您的姓名',
-            icon: Icons.person_outline,
-          ),
+          _buildFieldLabel('你的姓名'),
+          const SizedBox(height: 8),
+          _buildFieldShell(_nameController, minLines: 1, maxLines: 1),
           const SizedBox(height: 14),
-          _buildTextField(
-            controller: _snController,
-            label: 'SN序列号',
-            hint: '请输入设备SN序列号',
-            icon: Icons.qr_code,
-          ),
+          _buildFieldLabel('设备 SN'),
+          const SizedBox(height: 8),
+          _buildFieldShell(_snController, minLines: 1, maxLines: 1),
           const SizedBox(height: 14),
-          _buildTextField(
-            controller: _issueController,
-            label: '问题描述（选填）',
-            hint: '请简要描述您的问题',
-            icon: Icons.description_outlined,
-            maxLines: 3,
-          ),
+          _buildFieldLabel('问题描述'),
+          const SizedBox(height: 8),
+          _buildFieldShell(_issueController, minLines: 3, maxLines: 4),
         ],
       ),
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    int maxLines = 1,
+  Widget _buildFieldLabel(String label) {
+    return Text(
+      label,
+      style: const TextStyle(
+        color: _textMuted,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+
+  Widget _buildFieldShell(
+    TextEditingController controller, {
+    required int minLines,
+    required int maxLines,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF6A728C),
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: _stroke),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x123E7BFF),
+            blurRadius: 12,
+            offset: Offset(0, 4),
           ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        minLines: minLines,
+        maxLines: maxLines,
+        decoration: const InputDecoration(
+          isCollapsed: true,
+          border: InputBorder.none,
         ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFFF8F9FE), Color(0xFFF1F4FF)],
-            ),
-            border: Border.all(color: const Color(0x1A5664FF)),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        style: const TextStyle(
+          color: _textPrimary,
+          fontSize: 14,
+          height: 1.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWaitingCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCard(
+        color: _panelSoft,
+        radius: BorderRadius.circular(28),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Icon(icon, size: 20, color: const Color(0xFF5664FF)),
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  maxLines: maxLines,
-                  decoration: InputDecoration(
-                    hintText: hint,
-                    border: InputBorder.none,
-                    hintStyle: const TextStyle(
-                      color: Color(0xFF8B93AA),
-                      fontSize: 15,
-                    ),
-                    contentPadding: EdgeInsets.zero,
+              const Expanded(
+                child: Text(
+                  '专家在线匹配中',
+                  style: TextStyle(
+                    color: _textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
-                  style: const TextStyle(
-                    color: Color(0xFF161B2F),
-                    fontSize: 15,
-                  ),
+                ),
+              ),
+              Text(
+                _statusMessage.isEmpty ? '00:36' : '00:36',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            height: 8,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                width: 180,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(999),
+                  gradient: const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Color(0xFF75F6D1), Color(0xFF71A7FF)],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            '已为你匹配“清洁电器高级工程师”，预计 1 分钟内接入。',
+            style: TextStyle(
+              color: _textMuted,
+              fontSize: 14,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: 18),
+          GestureDetector(
+            onTap: _cancelCall,
+            child: Container(
+              width: double.infinity,
+              height: 52,
+              decoration: BoxDecoration(
+                color: const Color(0x33FF8478),
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0x66FF8478)),
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                '取消请求',
+                style: TextStyle(
+                  color: Color(0xFFFF8478),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -517,16 +631,16 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
         width: double.infinity,
         height: 56,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(22),
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF3DC882), Color(0xFF2FB873)],
+            colors: [Color(0xFF75F6D1), Color(0xFF71A7FF)],
           ),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x333DC882),
-              blurRadius: 20,
+              color: Color(0x5571A7FF),
+              blurRadius: 26,
               offset: Offset(0, 10),
             ),
           ],
@@ -541,100 +655,14 @@ class _VideoSupportScreenState extends State<VideoSupportScreen> {
                   strokeWidth: 2.5,
                 ),
               )
-            : const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.video_call, color: Colors.white, size: 22),
-                  SizedBox(width: 10),
-                  Text(
-                    '发起视频请求',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-
-  Widget _buildWaitingCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.94),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: const Color(0x225C6680)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A3A436D),
-            blurRadius: 24,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: const Color(0xFFEEF2FF),
-              borderRadius: BorderRadius.circular(999),
-            ),
-            alignment: Alignment.center,
-            child: const SizedBox(
-              width: 40,
-              height: 40,
-              child: CircularProgressIndicator(
-                color: Color(0xFF5664FF),
-                strokeWidth: 3,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            _statusMessage,
-            style: const TextStyle(
-              color: Color(0xFF161B2F),
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            '客服正在赶来的路上，请稍等片刻',
-            style: TextStyle(
-              color: Color(0xFF6A728C),
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(height: 24),
-          GestureDetector(
-            onTap: _cancelCall,
-            child: Container(
-              width: double.infinity,
-              height: 52,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                color: const Color(0xFFFFE8E6),
-                border: Border.all(color: const Color(0x33FF8478)),
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                '取消请求',
+            : const Text(
+                '发起视频支持',
                 style: TextStyle(
-                  color: Color(0xFFFF8478),
+                  color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-            ),
-          ),
-        ],
       ),
     );
   }

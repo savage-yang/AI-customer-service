@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/chat_provider.dart';
+import 'chat_screen.dart';
+import 'video_history_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,106 +16,73 @@ class _ProfileScreenState extends State<ProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  // 我的产品（Mock 数据）
+  static const Color _textPrimary = Color(0xFFECF3FF);
+  static const Color _textMuted = Color(0xFFB8C7DE);
+  static const Color _stroke = Color(0x2EFFFFFF);
+  static const Color _accent = Color(0xFF75F6D1);
+  static const Color _accentBlue = Color(0xFF71A7FF);
+  static const Color _warning = Color(0xFFFFB36B);
+
   final List<Map<String, dynamic>> _products = const [
     {
-      'name': '智能洗地机 X1 Pro',
-      'sn': 'SN-2024-0815-AX91',
-      'status': '正常',
+      'name': 'X1 Pro 智能洗地机',
+      'warranty': '保修至 2026.08.15',
+      'status': '运行正常',
       'statusType': 'normal',
-      'purchaseDate': '2024-08-15',
-      'warranty': '保修至 2026-08-15',
+      'summary': '核心部件状态稳定，当前没有异常工单。',
     },
     {
-      'name': '扫地机器人 R7',
-      'sn': 'SN-2024-0302-BR22',
-      'status': '维修中',
+      'name': 'R7 扫地机器人',
+      'warranty': '当前存在售后工单',
+      'status': '维修处理中',
       'statusType': 'repairing',
-      'purchaseDate': '2024-03-02',
-      'warranty': '保修至 2026-03-02',
-    },
-    {
-      'name': '无线吸尘器 V12',
-      'sn': 'SN-2023-0510-CC78',
-      'status': '已过保',
-      'statusType': 'expired',
-      'purchaseDate': '2023-05-10',
-      'warranty': '保修已过期',
+      'summary': '滚轮异响问题已进入专家跟进阶段。',
     },
   ];
 
-  // 销售记录
   final List<Map<String, dynamic>> _salesRecords = const [
     {
-      'title': '智能洗地机 X1 Pro',
+      'title': 'X1 Pro 智能洗地机',
       'orderNo': 'SO20240815001',
       'amount': '¥2,999',
       'date': '2024-08-15',
       'channel': '官方商城',
+      'desc': '含安装指导与基础延保服务',
     },
     {
-      'title': '扫地机器人 R7',
+      'title': 'R7 扫地机器人',
       'orderNo': 'SO20240302001',
       'amount': '¥1,899',
       'date': '2024-03-02',
       'channel': '京东旗舰店',
-    },
-    {
-      'title': '无线吸尘器 V12',
-      'orderNo': 'SO20230510001',
-      'amount': '¥1,299',
-      'date': '2023-05-10',
-      'channel': '天猫旗舰店',
+      'desc': '赠送一年耗材礼包',
     },
   ];
 
-  // 维修记录
-  final List<Map<String, dynamic>> _repairRecords = const [
-    {
-      'title': '扫地机器人 R7 - 滚轮异响',
-      'ticketNo': 'RP20250612003',
-      'status': '维修中',
-      'date': '2025-06-12',
-      'desc': '滚轮运转时出现异响，已寄回检修',
-    },
-    {
-      'title': '智能洗地机 X1 Pro - 滤网更换',
-      'ticketNo': 'RP20241201001',
-      'status': '已完成',
-      'date': '2024-12-01',
-      'desc': 'HEPA 滤网老化，上门更换完成',
-    },
-  ];
-
-  // 售后记录
-  final List<Map<String, dynamic>> _serviceRecords = const [
-    {
-      'title': '智能洗地机 X1 Pro - 退款咨询',
-      'ticketNo': 'AS20250108002',
-      'status': '已解决',
-      'date': '2025-01-08',
-      'desc': '咨询配件退款进度，已到账',
-    },
-    {
-      'title': '无线吸尘器 V12 - 电池续航',
-      'ticketNo': 'AS20240920001',
-      'status': '已解决',
-      'date': '2024-09-20',
-      'desc': '续航时间缩短，客服指导重置电池',
-    },
-    {
-      'title': '扫地机器人 R7 - 地图丢失',
-      'ticketNo': 'AS20240415001',
-      'status': '已解决',
-      'date': '2024-04-15',
-      'desc': '建图丢失，远程协助重新建图',
-    },
-  ];
+  BoxDecoration _glassCard({
+    Gradient? gradient,
+    Color color = const Color(0xDD18253A),
+    BorderRadius? radius,
+  }) {
+    return BoxDecoration(
+      color: gradient == null ? color : null,
+      gradient: gradient,
+      borderRadius: radius ?? BorderRadius.circular(28),
+      border: Border.all(color: _stroke),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x66000000),
+          blurRadius: 28,
+          offset: Offset(0, 16),
+        ),
+      ],
+    );
+  }
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -128,584 +100,707 @@ class _ProfileScreenState extends State<ProfileScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFF8F9FF),
-              Color(0xFFF6F7FB),
-              Color(0xFFEEF2FF),
+              Color(0xFF0E1930),
+              Color(0xFF11203A),
+              Color(0xFF0A1324),
             ],
           ),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(),
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: [
-                    const SizedBox(height: 8),
-                    _buildUserCard(),
-                    const SizedBox(height: 20),
-                    _buildSectionTitle('我的产品', Icons.inventory_2_outlined),
-                    const SizedBox(height: 12),
-                    ..._products.map((p) => _buildProductCard(p)),
-                    const SizedBox(height: 24),
-                    _buildSectionTitle('历史记录', Icons.history),
-                    const SizedBox(height: 12),
-                    _buildHistoryTabs(),
-                  ],
-                ),
-              ),
-            ],
+          child: Consumer<ChatProvider>(
+            builder: (context, chatProvider, _) {
+              final latestRecord = chatProvider.afterSalesRecords.isNotEmpty
+                  ? chatProvider.afterSalesRecords.first
+                  : null;
+
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 18),
+                  _buildHeroCard(chatProvider),
+                  const SizedBox(height: 14),
+                  _buildSectionBlock(
+                    title: '我的设备',
+                    actionLabel: '查看全部',
+                    child: Column(
+                      children: _products.map(_buildDeviceCard).toList(),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  _buildSectionBlock(
+                    title: '最近售后摘要',
+                    actionLabel: '进入历史',
+                    onActionTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const VideoHistoryScreen(),
+                        ),
+                      );
+                    },
+                    child: _buildLatestSummaryCard(chatProvider, latestRecord),
+                  ),
+                  const SizedBox(height: 18),
+                  _buildSectionHeader('服务记录'),
+                  const SizedBox(height: 12),
+                  _buildHistoryTabs(chatProvider),
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0x225C6680)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x1A3A436D),
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              alignment: Alignment.center,
-              child: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Color(0xFF5664FF),
-                size: 18,
-              ),
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            width: 46,
+            height: 46,
+            decoration: _glassCard(
+              color: const Color(0xC022314A),
+              radius: BorderRadius.circular(16),
             ),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.arrow_back_ios_new,
+              color: _accent,
+              size: 18,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroCard(ChatProvider chatProvider) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 26, 24, 20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment(-1.0, -1.0),
+          end: Alignment(1.0, 1.0),
+          colors: [Color(0xFF22314A), Color(0xFF1A273C), Color(0xFF111B2A)],
+          stops: [0.0, 0.5, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: const Color(0x22B8FFE8)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1875F6D1),
+            blurRadius: 32,
+            spreadRadius: 0,
+            offset: Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Color(0x66000000),
+            blurRadius: 34,
+            offset: Offset(0, 18),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 68,
+                height: 68,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(22),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Color(0xFF26364F), Color(0xFF1A273B)],
+                  ),
+                  border: Border.all(
+                    color: const Color(0x24B8FFE8),
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x1275F6D1),
+                      blurRadius: 16,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
+                ),
+                alignment: Alignment.center,
+                child: const Text(
+                  'L',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '尊享服务会员',
+                      style: TextStyle(
+                        color: Color(0xF0ECF3FF),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'Luna Chen',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.8,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+          Row(
+            children: [
+              Expanded(
+                child: _buildMetricCard('03', '已绑定设备'),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildMetricCard(
+                  '${chatProvider.afterSalesRecords.length}',
+                  '售后记录',
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildMetricCard('2.4h', '累计协助'),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildUserCard() {
+  Widget _buildMetricCard(String value, String label) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF5664FF), Color(0xFF7D82FF), Color(0xFFA8ADFF)],
+          colors: [Color(0x2418242F), Color(0x18111A23)],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '尊享会员',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.25),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: const Text(
-                        'VIP 黄金会员',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildStatItem('${_products.length}', '持有产品'),
-                Container(
-                  width: 1,
-                  height: 28,
-                  color: Colors.white.withOpacity(0.3),
-                ),
-                _buildStatItem('${_repairRecords.length}', '维修记录'),
-                Container(
-                  width: 1,
-                  height: 28,
-                  color: Colors.white.withOpacity(0.3),
-                ),
-                _buildStatItem('${_serviceRecords.length}', '售后记录'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(String value, String label) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionTitle(String title, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, color: const Color(0xFF5664FF), size: 20),
-        const SizedBox(width: 8),
-        Text(
-          title,
-          style: const TextStyle(
-            color: Color(0xFF161B2F),
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProductCard(Map<String, dynamic> product) {
-    final statusConfig = _getStatusConfig(product['statusType'] as String);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0x145664FF)),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0x1FB8FFE8)),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x145F6FFF),
-            blurRadius: 12,
-            offset: Offset(0, 4),
+            color: Color(0x1475F6D1),
+            blurRadius: 18,
+            offset: Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFEEF2FF),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                alignment: Alignment.center,
-                child: const Icon(
-                  Icons.devices,
-                  color: Color(0xFF5664FF),
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product['name'] as String,
-                      style: const TextStyle(
-                        color: Color(0xFF161B2F),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      product['sn'] as String,
-                      style: const TextStyle(
-                        color: Color(0xFF9AA3BA),
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: statusConfig['bgColor'],
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  product['status'] as String,
-                  style: TextStyle(
-                    color: statusConfig['textColor'],
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FE),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.calendar_today_outlined,
-                  color: Color(0xFF9AA3BA),
-                  size: 14,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '购买于 ${product['purchaseDate']}',
-                  style: const TextStyle(
-                    color: Color(0xFF6B7390),
-                    fontSize: 13,
-                  ),
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.shield_outlined,
-                  color: statusConfig['textColor'],
-                  size: 14,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  product['warranty'] as String,
-                  style: TextStyle(
-                    color: statusConfig['textColor'],
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Map<String, dynamic> _getStatusConfig(String type) {
-    switch (type) {
-      case 'normal':
-        return {
-          'bgColor': const Color(0xFFE8F8EF),
-          'textColor': const Color(0xFF3DC882),
-        };
-      case 'repairing':
-        return {
-          'bgColor': const Color(0xFFFFF1E6),
-          'textColor': const Color(0xFFFF8478),
-        };
-      case 'expired':
-        return {
-          'bgColor': const Color(0xFFF1F2F6),
-          'textColor': const Color(0xFF9AA3BA),
-        };
-      default:
-        return {
-          'bgColor': const Color(0xFFEEF2FF),
-          'textColor': const Color(0xFF5664FF),
-        };
-    }
-  }
-
-  Widget _buildHistoryTabs() {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF1F2F6),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: TabBar(
-            controller: _tabController,
-            indicator: BoxDecoration(
+          Text(
+            value,
+            style: const TextStyle(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1A3A436D),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
-                ),
-              ],
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.8,
             ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerColor: Colors.transparent,
-            labelColor: const Color(0xFF5664FF),
-            unselectedLabelColor: const Color(0xFF9AA3BA),
-            labelStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
-            unselectedLabelStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-            tabs: const [
-              Tab(text: '销售'),
-              Tab(text: '维修'),
-              Tab(text: '售后'),
-            ],
           ),
-        ),
-        const SizedBox(height: 16),
-        AnimatedBuilder(
-          animation: _tabController,
-          builder: (context, _) {
-            final List<Map<String, dynamic>> records;
-            switch (_tabController.index) {
-              case 0:
-                records = _salesRecords;
-                break;
-              case 1:
-                records = _repairRecords;
-                break;
-              default:
-                records = _serviceRecords;
-            }
-            return Column(
-              children: records
-                  .map((r) => _buildRecordCard(r, _tabController.index))
-                  .toList(),
-            );
-          },
-        ),
-      ],
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.9),
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildRecordCard(Map<String, dynamic> record, int tabType) {
-    final isFinished =
-        record['status'] == '已完成' || record['status'] == '已解决';
-    final statusColor =
-        isFinished ? const Color(0xFF3DC882) : const Color(0xFFFF8478);
-    final statusBg =
-        isFinished ? const Color(0xFFE8F8EF) : const Color(0xFFFFF1E6);
+  Widget _buildSectionBlock({
+    required String title,
+    required Widget child,
+    String? actionLabel,
+    VoidCallback? onActionTap,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCard(
+        color: const Color(0xC022314A),
+        radius: BorderRadius.circular(28),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: _textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const Spacer(),
+              if (actionLabel != null)
+                GestureDetector(
+                  onTap: onActionTap,
+                  child: Text(
+                    actionLabel,
+                    style: const TextStyle(
+                      color: _textMuted,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
 
-    IconData leadingIcon;
-    switch (tabType) {
-      case 0:
-        leadingIcon = Icons.shopping_bag_outlined;
-        break;
-      case 1:
-        leadingIcon = Icons.build_outlined;
-        break;
-      default:
-        leadingIcon = Icons.support_agent;
-    }
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        color: _textPrimary,
+        fontSize: 20,
+        fontWeight: FontWeight.w800,
+      ),
+    );
+  }
+
+  Widget _buildDeviceCard(Map<String, dynamic> product) {
+    final color = _statusColor(product['statusType'] as String);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0x145664FF)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x145F6FFF),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: _stroke),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: const Color(0xFFEEF2FF),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            alignment: Alignment.center,
-            child: Icon(
-              leadingIcon,
-              color: const Color(0xFF5664FF),
-              size: 22,
-            ),
-          ),
-          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        record['title'] as String,
-                        style: const TextStyle(
-                          color: Color(0xFF161B2F),
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    if (record['status'] != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: statusBg,
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          record['status'] as String,
-                          style: TextStyle(
-                            color: statusColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                  ],
+                Text(
+                  product['name'] as String,
+                  style: const TextStyle(
+                    color: _textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 6),
-                if (record['desc'] != null)
-                  Text(
-                    record['desc'] as String,
-                    style: const TextStyle(
-                      color: Color(0xFF6B7390),
-                      fontSize: 13,
-                      height: 1.5,
-                    ),
+                Text(
+                  product['warranty'] as String,
+                  style: const TextStyle(
+                    color: _textMuted,
+                    fontSize: 13,
                   ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FE),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        record['ticketNo'] ?? record['orderNo'] ?? '',
-                        style: const TextStyle(
-                          color: Color(0xFF9AA3BA),
-                          fontSize: 12,
-                        ),
-                      ),
-                      const Spacer(),
-                      if (record['amount'] != null)
-                        Text(
-                          record['amount'] as String,
-                          style: const TextStyle(
-                            color: Color(0xFF5664FF),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        )
-                      else if (record['channel'] != null)
-                        Text(
-                          record['channel'] as String,
-                          style: const TextStyle(
-                            color: Color(0xFF9AA3BA),
-                            fontSize: 12,
-                          ),
-                        ),
-                      const SizedBox(width: 10),
-                      Text(
-                        record['date'] as String,
-                        style: const TextStyle(
-                          color: Color(0xFF9AA3BA),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  product['summary'] as String,
+                  style: const TextStyle(
+                    color: _textMuted,
+                    fontSize: 12,
+                    height: 1.55,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              product['status'] as String,
+              style: TextStyle(
+                color: color,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Widget _buildLatestSummaryCard(
+    ChatProvider chatProvider,
+    Map<String, dynamic>? record,
+  ) {
+    if (record == null) {
+      return const Text(
+        '当前还没有售后记录，后续创建工单后会在这里生成服务摘要。',
+        style: TextStyle(
+          color: _textMuted,
+          fontSize: 14,
+          height: 1.6,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () => _openServiceRecord(chatProvider, record),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: _stroke),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0x3375F6D1),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: const Text(
+                    'AI Summary',
+                    style: TextStyle(
+                      color: _accent,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  record['date'] as String? ?? '',
+                  style: const TextStyle(
+                    color: _textMuted,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              record['title'] as String? ?? '最近售后记录',
+              style: const TextStyle(
+                color: _textPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              record['desc'] as String? ?? '',
+              style: const TextStyle(
+                color: _textMuted,
+                fontSize: 14,
+                height: 1.65,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHistoryTabs(ChatProvider chatProvider) {
+    final selectedIndex = _tabController.index;
+
+    return Column(
+      children: [
+        Container(
+          height: 62,
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: const Color(0xC022314A),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: _stroke),
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final segmentWidth = (constraints.maxWidth - 12) / 2;
+              return Stack(
+                children: [
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 240),
+                    curve: Curves.easeOutCubic,
+                    left: selectedIndex == 0 ? 0 : segmentWidth,
+                    top: 0,
+                    child: Container(
+                      width: segmentWidth,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Color(0xFF75F6D1), Color(0xFF71A7FF)],
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x4471A7FF),
+                            blurRadius: 18,
+                            offset: Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildTabButton(
+                          label: '销售记录',
+                          selected: selectedIndex == 0,
+                          onTap: () {
+                            setState(() {
+                              _tabController.index = 0;
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildTabButton(
+                          label: '售后记录',
+                          selected: selectedIndex == 1,
+                          onTap: () {
+                            setState(() {
+                              _tabController.index = 1;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        ...(selectedIndex == 0
+                ? _salesRecords
+                : chatProvider.afterSalesRecords)
+            .map((record) => _buildRecordCard(
+                  record,
+                  selectedIndex,
+                  chatProvider,
+                )),
+      ],
+    );
+  }
+
+  Widget _buildTabButton({
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        height: 50,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: Colors.transparent,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? const Color(0xFF041320) : _textMuted,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecordCard(
+    Map<String, dynamic> record,
+    int tabIndex,
+    ChatProvider chatProvider,
+  ) {
+    final status = record['status'] as String?;
+    final isDone = (status ?? '').contains('完成') || (status ?? '').contains('解决');
+    final statusColor = isDone ? _accent : _warning;
+
+    final card = Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCard(
+        color: const Color(0xC022314A),
+        radius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      record['title'] as String? ?? '',
+                      style: const TextStyle(
+                        color: _textPrimary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      record['desc'] as String? ??
+                          record['channel'] as String? ??
+                          '',
+                      style: const TextStyle(
+                        color: _textMuted,
+                        fontSize: 13,
+                        height: 1.6,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (status != null) ...[
+                const SizedBox(width: 12),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      color: statusColor,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildChip(record['orderNo'] as String? ?? record['ticketNo'] as String? ?? ''),
+              _buildChip(record['date'] as String? ?? ''),
+              if (record['amount'] != null) _buildChip(record['amount'] as String),
+              if (record['type'] != null) _buildChip(record['type'] as String),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    if (tabIndex == 1) {
+      return GestureDetector(
+        onTap: () => _openServiceRecord(chatProvider, record),
+        child: card,
+      );
+    }
+    return card;
+  }
+
+  Widget _buildChip(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: _stroke),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: _textPrimary,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  void _openServiceRecord(ChatProvider chatProvider, Map<String, dynamic> record) {
+    final ticketNo = record['ticketNo'] as String?;
+    if (ticketNo == null) {
+      return;
+    }
+
+    final videoId = chatProvider.ticketToVideo[ticketNo];
+    final sessionId = chatProvider.ticketToSession[ticketNo];
+
+    if (videoId != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => VideoHistoryScreen(initialVideoId: videoId),
+        ),
+      );
+      return;
+    }
+
+    if (sessionId != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ChatScreen(initialSessionId: sessionId),
+        ),
+      );
+    }
+  }
+
+  Color _statusColor(String type) {
+    switch (type) {
+      case 'normal':
+        return _accent;
+      case 'repairing':
+        return _warning;
+      case 'expired':
+        return const Color(0xFFB0BDD6);
+      default:
+        return _accentBlue;
+    }
   }
 }

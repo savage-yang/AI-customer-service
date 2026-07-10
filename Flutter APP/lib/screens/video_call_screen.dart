@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/video_provider.dart';
 import '../services/video_service.dart';
 
@@ -13,6 +15,11 @@ class VideoCallScreen extends StatefulWidget {
 }
 
 class _VideoCallScreenState extends State<VideoCallScreen> {
+  static const Color _textPrimary = Color(0xFFECF3FF);
+  static const Color _stroke = Color(0x1FFFFFFF);
+  static const Color _accent = Color(0xFF75F6D1);
+  static const Color _danger = Color(0xFFFF8478);
+
   late VideoService _service;
   late RTCVideoRenderer _remoteRenderer;
   late RTCVideoRenderer _localRenderer;
@@ -68,14 +75,46 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0F1A),
+      backgroundColor: const Color(0xFF0B1628),
       body: SafeArea(
         child: Stack(
           children: [
             Positioned.fill(
-              child: RTCVideoView(
-                _remoteRenderer,
-                objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+              child: DecoratedBox(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF0E1930),
+                      Color(0xFF11203A),
+                      Color(0xFF0A1324),
+                    ],
+                  ),
+                ),
+                child: RTCVideoView(
+                  _remoteRenderer,
+                  objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 72,
+              right: 28,
+              child: Container(
+                width: 18,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: _accent,
+                  borderRadius: BorderRadius.circular(999),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xAA75F6D1),
+                      blurRadius: 26,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
               ),
             ),
             Positioned(
@@ -109,19 +148,19 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.4),
+              color: const Color(0x99132138),
               borderRadius: BorderRadius.circular(999),
-              border: Border.all(color: Colors.white.withOpacity(0.15)),
+              border: Border.all(color: _stroke),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.arrow_back_ios_new, size: 14, color: Colors.white),
+                Icon(Icons.arrow_back_ios_new, size: 14, color: _textPrimary),
                 SizedBox(width: 4),
                 Text(
                   '返回',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: _textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -134,9 +173,9 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.4),
+            color: const Color(0x99132138),
             borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: _stroke),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -145,7 +184,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3DC882),
+                  color: _accent,
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -153,7 +192,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               const Text(
                 '正在通话中',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: _textPrimary,
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
                 ),
@@ -172,7 +211,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: Colors.white.withOpacity(0.25),
+          color: const Color(0x339AB9D4),
           width: 2,
         ),
         boxShadow: const [
@@ -201,7 +240,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withOpacity(0.7),
+            const Color(0xFF050B16).withValues(alpha: 0.84),
           ],
         ),
       ),
@@ -242,18 +281,18 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
             height: 56,
             decoration: BoxDecoration(
               color: isActive
-                  ? Colors.white.withOpacity(0.18)
-                  : const Color(0xFFFF8478).withOpacity(0.25),
+                  ? Colors.white.withValues(alpha: 0.14)
+                  : _danger.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
                 color: isActive
-                    ? Colors.white.withOpacity(0.25)
-                    : const Color(0xFFFF8478).withOpacity(0.4),
+                    ? const Color(0x339AB9D4)
+                    : _danger.withValues(alpha: 0.35),
               ),
             ),
             child: Icon(
               icon,
-              color: isActive ? Colors.white : const Color(0xFFFF8478),
+              color: isActive ? _textPrimary : _danger,
               size: 26,
             ),
           ),
@@ -261,7 +300,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           Text(
             label,
             style: TextStyle(
-              color: isActive ? Colors.white : const Color(0xFFFF8478),
+              color: isActive ? _textPrimary : _danger,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -287,7 +326,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Color(0xFFFF8478), Color(0xFFFF9E74)],
+                colors: [Color(0xFFFF8478), Color(0xFFE76D68)],
               ),
               borderRadius: BorderRadius.circular(999),
               boxShadow: const [
@@ -308,7 +347,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
           const Text(
             '挂断',
             style: TextStyle(
-              color: Color(0xFFFF8478),
+              color: _danger,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

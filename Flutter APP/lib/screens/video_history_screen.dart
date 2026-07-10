@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 
 class VideoHistoryScreen extends StatefulWidget {
-  const VideoHistoryScreen({super.key});
+  final String? initialVideoId;
+
+  const VideoHistoryScreen({super.key, this.initialVideoId});
 
   @override
   State<VideoHistoryScreen> createState() => _VideoHistoryScreenState();
 }
 
 class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
+  static const Color _textPrimary = Color(0xFFECF3FF);
+  static const Color _textMuted = Color(0xFFB8C7DE);
+  static const Color _stroke = Color(0x2EFFFFFF);
+  static const Color _accent = Color(0xFF75F6D1);
+  static const Color _accentBlue = Color(0xFF71A7FF);
+
   final List<Map<String, dynamic>> _historyList = [
     {
       'id': 'VH20250612001',
+      'ticketNo': 'AS20250612001',
       'product': '扫地机器人 R7',
       'sn': 'SN-2024-0302-BR22',
       'issue': '滚轮异响检修',
@@ -21,19 +30,20 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
       'status': '已完成',
       'statusType': 'done',
       'summary': {
-        'problem': '用户反馈扫地机器人 R7 在清扫过程中右侧主滚轮出现明显异响，尤其在转向和经过地毯时声音较大。',
-        'diagnosis': '客服通过视频指导用户拆开主刷模组检查，发现右侧滚轮轴承处缠绕了大量头发，导致轴承摩擦异响。',
+        'problem': '设备在清扫过程中右侧主滚轮出现明显异响，转向和过门槛时尤为明显。',
+        'diagnosis': '视频协助检查后确认滚轮轴承位置缠绕了较多毛发，导致滚轮摩擦异常。',
         'solution': [
-          '指导用户使用清理工具清除缠绕的头发',
-          '演示主刷模组正确拆卸和安装方法',
-          '建议每周清理一次主刷，防止毛发缠绕',
-          '如清理后仍有异响，可申请售后更换轴承组件',
+          '指导用户使用清洁工具拆下滚轮并去除毛发缠绕。',
+          '演示滚轮模块的正确装回方式，避免再次偏位。',
+          '建议每周进行一次滚轮清洁，减少耗材积灰。',
+          '如再次出现异响，可申请更换滚轮组件。',
         ],
-        'result': '用户自行清理后异响消失，问题解决，无需返厂维修。',
+        'result': '用户完成清理后异响消失，问题已解决，无需返厂维修。',
       },
     },
     {
       'id': 'VH20250328002',
+      'ticketNo': 'AS20250328001',
       'product': '智能洗地机 X1 Pro',
       'sn': 'SN-2024-0815-AX91',
       'issue': '污水箱异味处理',
@@ -44,89 +54,48 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
       'status': '已完成',
       'statusType': 'done',
       'summary': {
-        'problem': '用户反映洗地机使用约半年后，污水箱产生明显异味，即使每次用完清水冲洗也无法消除。',
-        'diagnosis': '客服判断为污水箱管道和滤网长期积留污水残留，滋生细菌导致异味。',
+        'problem': '设备使用半年后污水箱出现持续异味，日常冲洗无法完全消除。',
+        'diagnosis': '判断为污水箱管路和滤网长期残留积污，滋生细菌导致异味。',
         'solution': [
-          '演示污水箱深度清洁步骤：清水 + 中性洗涤剂浸泡30分钟',
-          '指导拆卸滤网组件单独刷洗',
-          '介绍每月用白醋兑水浸泡消毒的方法',
-          '建议每次使用后开盖晾干，避免密闭滋生细菌',
+          '演示污水箱深度清洁步骤：清水加中性清洁液浸泡 30 分钟。',
+          '指导拆卸滤网单独刷洗，并检查密封圈状态。',
+          '建议每月使用白醋兑水进行一次消毒除味。',
+          '提醒每次使用后保持开盖晾干，避免潮湿积味。',
         ],
-        'result': '用户按方法深度清洁后异味消除，后续保持良好清洁习惯。',
-      },
-    },
-    {
-      'id': 'VH20241201003',
-      'product': '智能洗地机 X1 Pro',
-      'sn': 'SN-2024-0815-AX91',
-      'issue': '滤网更换指导',
-      'agent': '王师傅（技术支持）',
-      'date': '2024-12-01',
-      'time': '16:00 - 16:12',
-      'duration': '12分钟',
-      'status': '已完成',
-      'statusType': 'done',
-      'summary': {
-        'problem': '用户收到新的 HEPA 滤网配件，不知道如何更换，担心拆坏机器。',
-        'diagnosis': '属于正常耗材更换指导，无故障问题。',
-        'solution': [
-          '视频演示滤网舱盖打开方式',
-          '指导旧滤网取出和新滤网安装方向',
-          '强调滤网不可水洗，需定期更换（建议3-6个月）',
-          '告知滤网可在官方商城购买，提供配件型号',
-        ],
-        'result': '用户成功完成滤网更换，对服务表示满意。',
-      },
-    },
-    {
-      'id': 'VH20240915004',
-      'product': '无线吸尘器 V12',
-      'sn': 'SN-2023-0510-CC78',
-      'issue': '电池续航明显下降',
-      'agent': '赵客服（售后专员）',
-      'date': '2024-09-15',
-      'time': '09:20 - 09:45',
-      'duration': '25分钟',
-      'status': '已过保',
-      'statusType': 'expired',
-      'summary': {
-        'problem': '用户反馈吸尘器使用一年多后，续航从原来的40分钟降到15分钟左右，影响使用体验。',
-        'diagnosis': '电池属于消耗品，经过约500次充放电循环后容量自然衰减至约60%，属于正常老化。',
-        'solution': [
-          '指导用户进行电池校准操作（充满后连续放电至自动关机）',
-          '介绍电池保养技巧：避免长期满电存放',
-          '提供付费更换电池的报价和流程（已过保）',
-          '建议日常使用中档吸力，延长电池寿命',
-        ],
-        'result': '用户选择自行购买电池更换，客服提供了更换视频教程链接。',
-      },
-    },
-    {
-      'id': 'VH20240720005',
-      'product': '扫地机器人 R7',
-      'sn': 'SN-2024-0302-BR22',
-      'issue': '建图失败排查',
-      'agent': '张工（高级工程师）',
-      'date': '2024-07-20',
-      'time': '20:00 - 20:35',
-      'duration': '35分钟',
-      'status': '已完成',
-      'statusType': 'done',
-      'summary': {
-        'problem': '用户新购扫地机器人，首次建图总是失败，机器人走几步就停下来报建图错误。',
-        'diagnosis': '通过视频排查，发现用户家中光线较暗，且地面有较多反光瓷砖，影响激光雷达建图精度。',
-        'solution': [
-          '指导用户开启建图模式时打开主灯保证环境亮度',
-          '演示在APP中调整建图精度设置',
-          '建议先从一个房间开始建图，逐步扩展到全屋',
-          '远程协助重置机器人并重新建图',
-        ],
-        'result': '调整设置后成功完成全屋建图，用户确认正常使用。',
+        'result': '用户按步骤清洁后异味明显消除，后续按周期维护即可。',
       },
     },
   ];
 
   final Set<String> _expandedIds = {};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialVideoId != null) {
+      _expandedIds.add(widget.initialVideoId!);
+    }
+  }
+
+  BoxDecoration _glassCard({
+    Gradient? gradient,
+    Color color = const Color(0xDD18253A),
+    BorderRadius? radius,
+  }) {
+    return BoxDecoration(
+      color: gradient == null ? color : null,
+      gradient: gradient,
+      borderRadius: radius ?? BorderRadius.circular(28),
+      border: Border.all(color: _stroke),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x66000000),
+          blurRadius: 28,
+          offset: Offset(0, 16),
+        ),
+      ],
+    );
+  }
 
   void _toggleExpand(String id) {
     setState(() {
@@ -147,37 +116,25 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFFF8F9FF),
-              Color(0xFFF6F7FB),
-              Color(0xFFEEF2FF),
+              Color(0xFF0E1930),
+              Color(0xFF11203A),
+              Color(0xFF0A1324),
             ],
           ),
         ),
         child: SafeArea(
-          child: Column(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             children: [
-              _buildAppBar(),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: _historyList.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Column(
-                        children: [
-                          const SizedBox(height: 8),
-                          _buildStatCard(),
-                          const SizedBox(height: 16),
-                          _buildSectionTitle('全部记录', Icons.video_library_outlined),
-                          const SizedBox(height: 12),
-                        ],
-                      );
-                    }
-                    final item = _historyList[index - 1];
-                    return _buildHistoryCard(item);
-                  },
-                ),
-              ),
+              _buildHeader(),
+              const SizedBox(height: 18),
+              _buildTitleCard(),
+              const SizedBox(height: 18),
+              _buildOverviewCard(),
+              const SizedBox(height: 18),
+              _buildSectionHeader(),
+              const SizedBox(height: 12),
+              ..._historyList.map(_buildHistoryCard),
             ],
           ),
         ),
@@ -185,43 +142,102 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
     );
   }
 
-  Widget _buildAppBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0x225C6680)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x1A3A436D),
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              alignment: Alignment.center,
-              child: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Color(0xFF5664FF),
-                size: 18,
-              ),
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Container(
+            width: 46,
+            height: 46,
+            decoration: _glassCard(
+              color: const Color(0xC022314A),
+              radius: BorderRadius.circular(16),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.arrow_back_ios_new,
+              color: _accent,
+              size: 18,
             ),
           ),
-          const SizedBox(width: 14),
-          const Text(
-            '视频历史',
-            style: TextStyle(
-              color: Color(0xFF161B2F),
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
+        ),
+        const Spacer(),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: _glassCard(
+            color: const Color(0xC022314A),
+            radius: BorderRadius.circular(999),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.videocam_outlined, color: _accentBlue, size: 16),
+              SizedBox(width: 6),
+              Text(
+                '会议历史',
+                style: TextStyle(
+                  color: _textPrimary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTitleCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: _glassCard(
+        color: const Color(0xC022314A),
+      ),
+      child: Row(
+        children: [
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '服务记录中心',
+                  style: TextStyle(
+                    color: _textMuted,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Text(
+                  'Video History',
+                  style: TextStyle(
+                    color: _textPrimary,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.8,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0x3375F6D1), Color(0x4471A7FF)],
+              ),
+              border: Border.all(color: _stroke),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.history_toggle_off_rounded,
+              color: _textPrimary,
+              size: 22,
             ),
           ),
         ],
@@ -229,60 +245,90 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
     );
   }
 
-  Widget _buildStatCard() {
+  Widget _buildOverviewCard() {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.fromLTRB(24, 26, 24, 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(26),
         gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF232A55), Color(0xFF5664FF), Color(0xFF7D82FF)],
+          begin: Alignment(-1.0, -1.0),
+          end: Alignment(1.0, 1.0),
+          colors: [Color(0xFF22314A), Color(0xFF1A273C), Color(0xFF111B2A)],
+          stops: [0.0, 0.5, 1.0],
         ),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: const Color(0x22B8FFE8)),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x335664FF),
-            blurRadius: 30,
-            offset: Offset(0, 12),
+            color: Color(0x1875F6D1),
+            blurRadius: 32,
+            spreadRadius: 0,
+            offset: Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Color(0x66000000),
+            blurRadius: 34,
+            offset: Offset(0, 18),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF26364F), Color(0xFF1A273B)],
+              ),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: const Color(0x22B8FFE8)),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1275F6D1),
+                  blurRadius: 14,
+                  offset: Offset(0, 6),
+                ),
+              ],
+            ),
+            child: const Text(
+              'AI Service Archive',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
           const Text(
-            '视频协助记录',
+            '集中查看每次专家协助的诊断、处理过程与结果。',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 26,
               fontWeight: FontWeight.w800,
+              height: 1.1,
+              letterSpacing: -0.8,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 14),
           Text(
-            '共 ${_historyList.length} 次视频服务，累计约 ${_totalMinutes()} 分钟',
+            '共 ${_historyList.length} 次视频服务，累计 ${_totalMinutes()} 分钟协助时长。',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.75),
-              fontSize: 13,
+              color: Colors.white.withValues(alpha: 0.88),
+              fontSize: 15,
+              height: 1.45,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 22),
           Row(
             children: [
-              _buildStatItem(Icons.check_circle_outline, '${_doneCount()}', '已完成'),
-              Container(
-                width: 1,
-                height: 36,
-                color: Colors.white.withOpacity(0.2),
-              ),
-              _buildStatItem(Icons.timer_outlined, '${_totalMinutes()}', '总时长(分)'),
-              Container(
-                width: 1,
-                height: 36,
-                color: Colors.white.withOpacity(0.2),
-              ),
-              _buildStatItem(Icons.support_agent_outlined, '3', '客服数'),
+              Expanded(child: _buildMetricTile('${_historyList.length}', '会议总数')),
+              const SizedBox(width: 10),
+              Expanded(child: _buildMetricTile('${_doneCount()}', '已完成')),
+              const SizedBox(width: 10),
+              Expanded(child: _buildMetricTile('${_totalMinutes()}m', '累计时长')),
             ],
           ),
         ],
@@ -290,41 +336,43 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
     );
   }
 
-  int _totalMinutes() {
-    int total = 0;
-    for (var item in _historyList) {
-      final dur = item['duration'] as String;
-      final match = RegExp(r'(\d+)').firstMatch(dur);
-      if (match != null) {
-        total += int.parse(match.group(1)!);
-      }
-    }
-    return total;
-  }
-
-  int _doneCount() {
-    return _historyList.where((e) => e['statusType'] == 'done').length;
-  }
-
-  Widget _buildStatItem(IconData icon, String value, String label) {
-    return Expanded(
+  Widget _buildMetricTile(String value, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0x2418242F), Color(0x18111A23)],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0x1FB8FFE8)),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1475F6D1),
+            blurRadius: 18,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.white.withOpacity(0.85), size: 20),
-          const SizedBox(height: 6),
           Text(
             value,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w800),
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.8,
+            ),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 8),
           Text(
             label,
             style: TextStyle(
-              color: Colors.white.withOpacity(0.7),
-              fontSize: 12,
+              color: Colors.white.withValues(alpha: 0.9),
+              fontSize: 13,
             ),
           ),
         ],
@@ -332,16 +380,14 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title, IconData icon) {
-    return Row(
+  Widget _buildSectionHeader() {
+    return const Row(
       children: [
-        Icon(icon, color: const Color(0xFF5664FF), size: 20),
-        const SizedBox(width: 8),
         Text(
-          title,
-          style: const TextStyle(
-            color: Color(0xFF161B2F),
-            fontSize: 18,
+          '全部会议记录',
+          style: TextStyle(
+            color: _textPrimary,
+            fontSize: 20,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -351,43 +397,37 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
 
   Widget _buildHistoryCard(Map<String, dynamic> item) {
     final isExpanded = _expandedIds.contains(item['id']);
-    final statusConfig = _getStatusConfig(item['statusType'] as String);
+    final statusColor = _getStatusColor(item['statusType'] as String);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: const Color(0x145664FF)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x145F6FFF),
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
+      margin: const EdgeInsets.only(bottom: 14),
+      decoration: _glassCard(
+        color: const Color(0xC022314A),
+        radius: BorderRadius.circular(24),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
         onTap: () => _toggleExpand(item['id'] as String),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEEF2FF),
                       borderRadius: BorderRadius.circular(16),
+                      color: Colors.white.withValues(alpha: 0.06),
                     ),
                     alignment: Alignment.center,
                     child: const Icon(
-                      Icons.videocam,
-                      color: Color(0xFF5664FF),
-                      size: 24,
+                      Icons.videocam_rounded,
+                      color: _accent,
+                      size: 22,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -396,30 +436,29 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: Text(
                                 item['issue'] as String,
                                 style: const TextStyle(
-                                  color: Color(0xFF161B2F),
-                                  fontSize: 16,
+                                  color: _textPrimary,
+                                  fontSize: 17,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
                               decoration: BoxDecoration(
-                                color: statusConfig['bgColor'],
+                                color: statusColor.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Text(
                                 item['status'] as String,
                                 style: TextStyle(
-                                  color: statusConfig['textColor'],
+                                  color: statusColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -429,72 +468,10 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          '${item['product']} · ${item['sn']}',
+                          item['product'] as String,
                           style: const TextStyle(
-                            color: Color(0xFF9AA3BA),
+                            color: _textMuted,
                             fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person_outline,
-                              color: const Color(0xFF6B7390),
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              item['agent'] as String,
-                              style: const TextStyle(
-                                color: Color(0xFF6B7390),
-                                fontSize: 13,
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.access_time,
-                              color: const Color(0xFF6B7390),
-                              size: 14,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              item['duration'] as String,
-                              style: const TextStyle(
-                                color: Color(0xFF6B7390),
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF8F9FE),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                item['id'] as String,
-                                style: const TextStyle(
-                                  color: Color(0xFF9AA3BA),
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                '${item['date']} ${item['time']}'.split(' - ').first,
-                                style: const TextStyle(
-                                  color: Color(0xFF9AA3BA),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ],
@@ -502,219 +479,236 @@ class _VideoHistoryScreenState extends State<VideoHistoryScreen> {
                   ),
                 ],
               ),
-            ),
-            if (isExpanded) _buildSummarySection(item),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              const SizedBox(height: 14),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
                 children: [
-                  Icon(
-                    isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: const Color(0xFF5664FF),
-                    size: 20,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    isExpanded ? '收起 AI 摘要' : '展开 AI 摘要',
-                    style: const TextStyle(
-                      color: Color(0xFF5664FF),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  _buildInfoBadge(item['ticketNo'] as String),
+                  _buildInfoBadge(item['date'] as String),
+                  _buildInfoBadge(item['duration'] as String),
                 ],
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSummarySection(Map<String, dynamic> item) {
-    final summary = item['summary'] as Map<String, dynamic>;
-    final solutions = summary['solution'] as List;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FE),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0x1A5664FF)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
+              const SizedBox(height: 14),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF5664FF), Color(0xFF7D82FF)],
-                  ),
-                  borderRadius: BorderRadius.circular(999),
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: _stroke),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Row(
                   children: [
-                    Icon(Icons.auto_awesome, color: Colors.white, size: 14),
-                    SizedBox(width: 4),
-                    Text(
-                      'AI 智能摘要',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
+                    Expanded(
+                      child: _buildCompactInfo('设备 SN', item['sn'] as String),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _buildCompactInfo('服务专家', item['agent'] as String),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          _buildSummaryItem(
-            icon: Icons.help_outline,
-            label: '问题描述',
-            content: summary['problem'] as String,
-          ),
-          const SizedBox(height: 12),
-          _buildSummaryItem(
-            icon: Icons.search,
-            label: '诊断结果',
-            content: summary['diagnosis'] as String,
-          ),
-          const SizedBox(height: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.tips_and_updates_outlined,
-                    color: Color(0xFF5664FF),
-                    size: 16,
-                  ),
-                  const SizedBox(width: 6),
-                  const Text(
-                    '解决方案',
-                    style: TextStyle(
-                      color: Color(0xFF5664FF),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+              if (isExpanded) ...[
+                const SizedBox(height: 14),
+                _buildSummarySection(item['summary'] as Map<String, dynamic>),
+              ],
+              const SizedBox(height: 12),
+              Center(
+                child: Icon(
+                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: _accentBlue,
+                  size: 24,
+                ),
               ),
-              const SizedBox(height: 8),
-              ...solutions.asMap().entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 6, left: 4),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 18,
-                        height: 18,
-                        margin: const EdgeInsets.only(top: 2),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEEF2FF),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${entry.key + 1}',
-                          style: const TextStyle(
-                            color: Color(0xFF5664FF),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          entry.value as String,
-                          style: const TextStyle(
-                            color: Color(0xFF161B2F),
-                            fontSize: 14,
-                            height: 1.55,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
             ],
           ),
-          const SizedBox(height: 12),
-          _buildSummaryItem(
-            icon: Icons.task_alt,
-            label: '处理结果',
-            content: summary['result'] as String,
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildSummaryItem({
-    required IconData icon,
-    required String label,
-    required String content,
-  }) {
-    return Row(
+  Widget _buildCompactInfo(String label, String value) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color(0xFF5664FF), size: 16),
-        const SizedBox(width: 6),
         Text(
           label,
           style: const TextStyle(
-            color: Color(0xFF5664FF),
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
+            color: _textMuted,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            content,
-            style: const TextStyle(
-              color: Color(0xFF161B2F),
-              fontSize: 14,
-              height: 1.55,
-            ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: _textPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
     );
   }
 
-  Map<String, dynamic> _getStatusConfig(String type) {
+  Widget _buildInfoBadge(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: _stroke),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: _textPrimary,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummarySection(Map<String, dynamic> summary) {
+    final solutions = summary['solution'] as List<dynamic>;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _stroke),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: const Color(0x3375F6D1),
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: const Text(
+              'AI 智能摘要',
+              style: TextStyle(
+                color: _accent,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          _buildSummaryItem('问题描述', summary['problem'] as String),
+          const SizedBox(height: 12),
+          _buildSummaryItem('诊断结果', summary['diagnosis'] as String),
+          const SizedBox(height: 12),
+          const Text(
+            '解决方案',
+            style: TextStyle(
+              color: _accentBlue,
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...solutions.asMap().entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: const Color(0x3371A7FF),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${entry.key + 1}',
+                      style: const TextStyle(
+                        color: _accentBlue,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      entry.value as String,
+                      style: const TextStyle(
+                        color: _textPrimary,
+                        fontSize: 14,
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          const SizedBox(height: 4),
+          _buildSummaryItem('处理结果', summary['result'] as String),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem(String label, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: _accentBlue,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          content,
+          style: const TextStyle(
+            color: _textPrimary,
+            fontSize: 14,
+            height: 1.65,
+          ),
+        ),
+      ],
+    );
+  }
+
+  int _totalMinutes() {
+    int total = 0;
+    for (final item in _historyList) {
+      final duration = item['duration'] as String;
+      final match = RegExp(r'(\d+)').firstMatch(duration);
+      if (match != null) {
+        total += int.parse(match.group(1)!);
+      }
+    }
+    return total;
+  }
+
+  int _doneCount() {
+    return _historyList.where((item) => item['statusType'] == 'done').length;
+  }
+
+  Color _getStatusColor(String type) {
     switch (type) {
       case 'done':
-        return {
-          'bgColor': const Color(0xFFE8F8EF),
-          'textColor': const Color(0xFF3DC882),
-        };
+        return _accent;
       case 'expired':
-        return {
-          'bgColor': const Color(0xFFF1F2F6),
-          'textColor': const Color(0xFF9AA3BA),
-        };
+        return const Color(0xFFB0BDD6);
       default:
-        return {
-          'bgColor': const Color(0xFFFFF1E6),
-          'textColor': const Color(0xFFFF8478),
-        };
+        return const Color(0xFFFFB36B);
     }
   }
 }
